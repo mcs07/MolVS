@@ -287,6 +287,9 @@ class Mock(object):
             return Mock()
 
 MOCK_MODULES = ['rdkit', 'rdkit.Chem', 'rdkit.Chem.rdchem', 'rdkit.Chem.rdchem.BondDir', 'rdkit.Chem.rdchem.BondStereo',
-                'rdkit.Chem.rdchem.BondType']
+                'rdkit.Chem.rdchem.BondType', 'rdkit.Chem.rdchem.SINGLE', 'rdkit.Chem.rdchem.DOUBLE',
+                'rdkit.Chem.rdchem.TRIPLE', 'rdkit.Chem.rdchem.AROMATIC', 'rdkit.Chem.rdchem.BondStereo.STEREOANY',
+                'rdkit.Chem.rdchem.BondDir.ENDUPRIGHT', 'rdkit.Chem.rdchem.BondDir.ENDDOWNRIGHT',
+                'rdkit.Chem.rdchem.BondDir.NONE']
 for mod_name in MOCK_MODULES:
     sys.modules[mod_name] = Mock()
