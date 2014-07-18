@@ -7,9 +7,8 @@ Building a collection of chemical structures from different sources can be diffi
 drawing conventions and mistakes. MolVS can standardize chemical structures to improve data quality, help with
 de-duplication and identify relationships between molecules.
 
-The available standardization tasks include disconnecting metals, normalizing the drawing of functional groups,
-reionizing partially ionized acids, discarding salts and solvents, choosing a canonical tautomer, neutralizing charges
-and more.
+The available standardization tasks include disconnecting metals, normalizing functional groups, reionizing partially
+ionized acids, discarding salts and solvents, choosing a canonical tautomer, neutralizing charges and more.
 
 There are sensible defaults that make it easy to get started::
 
