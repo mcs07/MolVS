@@ -286,6 +286,7 @@ class Mock(object):
         else:
             return Mock()
 
-MOCK_MODULES = ['rdkit', 'rdkit.Chem', 'rdkit.Chem.rdchem']
+MOCK_MODULES = ['rdkit', 'rdkit.Chem', 'rdkit.Chem.rdchem', 'rdkit.Chem.rdchem.BondDir', 'rdkit.Chem.rdchem.BondStereo',
+                'rdkit.Chem.rdchem.BondType']
 for mod_name in MOCK_MODULES:
     sys.modules[mod_name] = Mock()
