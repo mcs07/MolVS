@@ -4,7 +4,8 @@ molvs.standardize
 ~~~~~~~~~~~~~~~~~
 
 This module contains the main :class:`~molvs.standardize.Standardizer` class that can be used to perform all
-standardization tasks, as well the :func:`~molvs.standardize.standardize_smiles` convenience function.
+standardization tasks, as well convenience functions like :func:`~molvs.standardize.standardize_smiles` for common
+standardization tasks.
 
 :copyright: Copyright 2014 by Matt Swain.
 :license: MIT, see LICENSE file for more details.
@@ -299,3 +300,35 @@ def standardize_smiles(smiles):
     mol = Chem.MolFromSmiles(smiles.encode('utf8'), sanitize=False)
     mol = Standardizer().standardize(mol)
     return Chem.MolToSmiles(mol, isomericSmiles=True)
+
+
+def enumerate_tautomers_smiles(smiles):
+    """Return a set of tautomers as SMILES strings, given a SMILES string.
+
+    :param smiles: A SMILES string.
+    :returns: A set containing SMILES strings for every possible tautomer.
+    :rtype: set of strings.
+    """
+    # Skip sanitize as standardize does this anyway
+    mol = Chem.MolFromSmiles(smiles.encode('utf8'), sanitize=False)
+    mol = Standardizer().standardize(mol)
+    tautomers = TautomerEnumerator().enumerate(mol)
+    return {Chem.MolToSmiles(m, isomericSmiles=True) for m in tautomers}
+
+
+def canonicalize_tautomer_smiles(smiles):
+    """Return a standardized canonical tautomer SMILES string given a SMILES string.
+
+    Note: This is a convenience function for quickly standardizing and finding the canonical tautomer for a single
+    SMILES string. It is more efficient to use the :class:`~molvs.standardize.Standardizer` class directly when working
+    with many molecules or when custom options are needed.
+
+    :param string smiles: The SMILES for the molecule.
+    :returns: The SMILES for the standardize canonical tautomer.
+    :rtype: string.
+    """
+    # Skip sanitize as standardize does this anyway
+    mol = Chem.MolFromSmiles(smiles.encode('utf8'), sanitize=False)
+    mol = Standardizer().standardize(mol)
+    tautomer = TautomerCanonicalizer().canonicalize(mol)
+    return Chem.MolToSmiles(tautomer, isomericSmiles=True)

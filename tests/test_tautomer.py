@@ -11,35 +11,11 @@ import nose
 from nose.tools import eq_
 from rdkit import Chem
 
-from molvs.standardize import Standardizer
+from molvs.standardize import Standardizer, enumerate_tautomers_smiles, canonicalize_tautomer_smiles
 from molvs.tautomer import TautomerEnumerator, TautomerCanonicalizer
 
 
 logging.basicConfig(level=logging.DEBUG)
-
-
-def enumerate_tautomers_smiles(smiles):
-    """Return a set of tautomers as SMILES strings, given a SMILES string.
-
-    :param smiles: A SMILES string.
-    """
-    # Skip sanitize as standardize does this anyway
-    mol = Chem.MolFromSmiles(smiles.encode('utf8'), sanitize=False)
-    mol = Standardizer().standardize(mol)
-    tautomers = TautomerEnumerator().enumerate(mol)
-    return {Chem.MolToSmiles(m, isomericSmiles=True) for m in tautomers}
-
-
-def canonicalize_tautomer_smiles(smiles):
-    """Return a canonical tautomer as a SMILES string, given a SMILES string.
-
-    :param smiles: A SMILES string.
-    """
-    # Skip sanitize as standardize does this anyway
-    mol = Chem.MolFromSmiles(smiles.encode('utf8'), sanitize=False)
-    mol = Standardizer().tautomer_parent(mol)
-    tautomer = TautomerCanonicalizer().canonicalize(mol)
-    return Chem.MolToSmiles(tautomer, isomericSmiles=True)
 
 
 def test_1_3_keto_enol_enumeration():

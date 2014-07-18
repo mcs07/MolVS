@@ -20,6 +20,8 @@ The MolVS package is made up of the following modules:
    :special-members: __call__
    :members:
 .. autofunction:: molvs.standardize.standardize_smiles
+.. autofunction:: molvs.standardize.enumerate_tautomers_smiles
+.. autofunction:: molvs.standardize.canonicalize_tautomer_smiles
 
 .. automodule:: molvs.normalize
 .. autodata:: molvs.normalize.NORMALIZATIONS
@@ -88,7 +90,6 @@ The MolVS package is made up of the following modules:
 .. automodule:: molvs.cli
 
 .. automodule:: molvs.errors
-
 .. autoexception:: molvs.errors.MolVSError()
 .. autoexception:: molvs.errors.StandardizeError()
 .. autoexception:: molvs.errors.ValidateError()

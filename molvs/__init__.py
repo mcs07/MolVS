@@ -23,7 +23,7 @@ __license__ = 'MIT'
 __copyright__ = 'Copyright 2014 Matt Swain'
 
 
-from .standardize import Standardizer, standardize_smiles
+from .standardize import Standardizer, standardize_smiles, enumerate_tautomers_smiles, canonicalize_tautomer_smiles
 from .errors import MolVSError, StandardizeError, ValidateError
 
 
