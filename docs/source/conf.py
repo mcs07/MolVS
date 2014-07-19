@@ -267,29 +267,17 @@ def setup(app):
 class Mock(object):
     """Mock."""
 
-    __all__ = []
-
     def __init__(self, *args, **kwargs):
         pass
 
     def __call__(self, *args, **kwargs):
+        if args and callable(args[0]):
+            return args[0]
         return Mock()
 
-    @classmethod
-    def __getattr__(cls, name):
-        if name in ('__file__', '__path__'):
-            return '/dev/null'
-        elif name[0] == name[0].upper():
-            mockType = type(name, (), {})
-            mockType.__module__ = __name__
-            return mockType
-        else:
-            return Mock()
+    def __getattribute__(self, name):
+        return Mock()
 
-MOCK_MODULES = ['rdkit', 'rdkit.Chem', 'rdkit.Chem.rdchem', 'rdkit.Chem.rdchem.BondDir', 'rdkit.Chem.rdchem.BondStereo',
-                'rdkit.Chem.rdchem.BondType', 'rdkit.Chem.rdchem.BondType.SINGLE', 'rdkit.Chem.rdchem.BondType.DOUBLE',
-                'rdkit.Chem.rdchem.BondType.TRIPLE', 'rdkit.Chem.rdchem.BondType.AROMATIC',
-                'rdkit.Chem.rdchem.BondStereo.STEREOANY', 'rdkit.Chem.rdchem.BondDir.ENDUPRIGHT',
-                'rdkit.Chem.rdchem.BondDir.ENDDOWNRIGHT', 'rdkit.Chem.rdchem.BondDir.NONE']
-for mod_name in MOCK_MODULES:
+# Mock rdkit imports so autodoc works even when rdkit isn't installed
+for mod_name in ['rdkit', 'rdkit.Chem', 'rdkit.Chem.rdchem']:
     sys.modules[mod_name] = Mock()
