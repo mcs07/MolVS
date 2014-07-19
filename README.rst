@@ -48,19 +48,21 @@ Similar projects
 
 There are a number of other projects with similar goals:
 
-- Francis Atkinson's `Standardiser`_.
-- The RSC's `Chemistry Validation and Standardization Platform (CVSP)`_.
-- The `PubChem Standardization Service`_.
-- Tripod `Structure standardizer`_.
-- The `FDA Substance Registration System Standard Operating Procedure`_.
+- `Francis Atkinson's Standardiser`_.
+- `RSC Chemistry Validation and Standardization Platform (CVSP)`_.
+- `PubChem Standardization Service`_.
+- `Tripod Structure standardizer`_.
+- `FDA Substance Registration System Standard Operating Procedure`_.
+- `ChemAxon Structure Standardizer`_.
 
 
 .. _`installation options`: http://molvs.readthedocs.org/en/latest/guide/install.html
 .. _`source code`: https://github.com/mcs07/MolVS
 .. _`Issue Tracker`: https://github.com/mcs07/MolVS/issues
 .. _`MIT license`: https://github.com/mcs07/MolVS/blob/master/LICENSE
-.. _`Standardiser`: https://wwwdev.ebi.ac.uk/chembl/extra/francis/standardiser/
-.. _`Chemistry Validation and Standardization Platform (CVSP)`: http://cvsp.chemspider.com
+.. _`Francis Atkinson's Standardiser`: https://wwwdev.ebi.ac.uk/chembl/extra/francis/standardiser/
+.. _`RSC Chemistry Validation and Standardization Platform (CVSP)`: http://cvsp.chemspider.com
 .. _`PubChem Standardization Service`: https://pubchem.ncbi.nlm.nih.gov/standardize/standardize.cgi
-.. _`Structure standardizer`: https://tripod.nih.gov/?p=61
+.. _`Tripod Structure standardizer`: https://tripod.nih.gov/?p=61
 .. _`FDA Substance Registration System Standard Operating Procedure`: http://www.fda.gov/downloads/ForIndustry/DataStandards/SubstanceRegistrationSystem-UniqueIngredientIdentifierUNII/ucm127743.pdf
+.. _`ChemAxon Structure Standardizer`: http://www.chemaxon.com/products/standardizer/
