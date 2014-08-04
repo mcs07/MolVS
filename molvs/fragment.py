@@ -18,7 +18,8 @@ import logging
 
 from rdkit import Chem
 from rdkit.Chem import rdMolDescriptors
-from molvs.utils import memoized_property
+
+from .utils import memoized_property
 
 
 log = logging.getLogger(__name__)
