@@ -5,41 +5,19 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 import logging
+import sys
+
+from rdkit import Chem
+
+from .errors import StopValidateError
+from .validations import VALIDATIONS
 
 
-# TODO: None of this works yet. Still figuring out exactly how to do this.
+#: The default format for log messages.
+SIMPLE_FORMAT = '%(levelname)s: [%(validation)s] %(message)s'
 
-
-VALIDATIONS = (
-
-)
-
-
-class Validation(object):
-    """The base class that all Validations must inherit from."""
-
-    def apply(self, mol, logger):
-        self.adapter = logging.LoggerAdapter(logger, {'validation': type(self).__name__})
-        self.run(mol)
-
-    def run(self, mol):
-        """
-
-        :return: The level for this Validation
-        """
-        raise NotImplementedError("Validation subclasses must implement the run method")
-
-
-
-class TmpValidation(Validation):
-
-    def run(self, mol):
-        self.adapter.warn('A message from TmpValidation here')
-
-
-# TODO: Think about logging formats
-SIMPLE_FORMAT = '%(levelname)s: %(message)s'
-LONG_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+#: A more detailed format for log messages. Specify when initializing a Validator.
+LONG_FORMAT = '%(asctime)s - %(levelname)s - %(validation)s - %(message)s'
 
 
 class LogHandler(logging.Handler):
@@ -49,6 +27,10 @@ class LogHandler(logging.Handler):
         logging.Handler.__init__(self)
         self.logs = []
 
+    @property
+    def logmessages(self):
+        return [self.format(record) for record in self.logs]
+
     def emit(self, record):
         """Append the record."""
         self.logs.append(record)
@@ -57,7 +39,7 @@ class LogHandler(logging.Handler):
         """Clear the log records."""
         self.acquire()
         try:
-            self.buffer = []
+            self.logs = []
         finally:
             self.release()
 
@@ -68,73 +50,50 @@ class LogHandler(logging.Handler):
 
 
 class Validator(object):
+    """"""
 
-    def __init__(self, validations=VALIDATIONS, log_format=SIMPLE_FORMAT):
-        self.validations = validations
-        self.log_format = log_format
+    def __init__(self, validations=VALIDATIONS, log_format=SIMPLE_FORMAT, level=logging.INFO, stdout=False, raw=False):
+        """"""
+        self.raw = raw
+        # Set up logger and add default LogHandler
         self.log = logging.getLogger(type(self).__name__)
+        self.log.setLevel(level)
         self.handler = LogHandler()
-        self.handler.setFormatter(logging.Formatter(self.log_format))
+        self.handler.setFormatter(logging.Formatter(log_format))
         self.log.addHandler(self.handler)
+        # Add stdout StreamHandler if specified in parameters
+        if stdout:
+            strhdlr = logging.StreamHandler(sys.stdout)
+            strhdlr.setFormatter(logging.Formatter(log_format))
+            self.log.addHandler(strhdlr)
+        # Instantiate the validations
+        self.validations = [validation(self.log) for validation in validations]
 
     def validate(self, mol):
+        """"""
+        # Clear any log messages from previous runs
         self.handler.flush()
-        self.log.warn('message here')
-        self.log.info('message here2')
-        self.log.warn('message here3')
-        print(self.handler.logs)
-        for log in self.handler.logs:
-            print(log)
+        # Run every validation, stopping if StopValidateError is raised
+        for validation in self.validations:
+            try:
+                validation(mol)
+            except StopValidateError:
+                break
+        return self.handler.logs if self.raw else self.handler.logmessages
 
 
+def validate_smiles(smiles):
+    """Return log messages for a given SMILES string using the default validations.
 
+    Note: This is a convenience function for quickly validating a single SMILES string. It is more efficient to use
+    the :class:`~molvs.validate.Validator` class directly when working with many molecules or when custom options
+    are needed.
 
-v = Validator()
-v.validate(None)
-
-
-
-# Attempt to read molecule using RDKit
-# - Can produce errors, e.g. invalid atom valence
-# - Is it possible to log the normalization of e.g. pentavalent nitro?
-
-# - WARN/ERROR: Are all atoms defined/real - no query atoms or invalid elements, r-group things
-# - WARN: No atoms present
-# - INFO: Not an overall neutral system
-# - INFO: Contains isotopes
-# - INFO: Contains unknown stereo (Perform stereochemistry perception first?)
-# - INFO: Nonstandard tautomer (log SMILES of tautomer parent, or the name of the tautomer transform?)
-# - WARN: InChI generation failed
-# - WARN: Contains covalent bond to metal (that would be broken by MetalDisconnector)
-# - WARN: Contains solvent molecules (in addition other fragment)
-# - WARN: More than 99 rings causes problems with SMILES
-# - INFO: Cis azo dye is unusual
-# - WARN: Adjacent atoms with like charges (i.e. both positive or both negative)
-# - INFO: Has more than one radical centre
-# - INFO: ethane, methane molecules present
-# - INFO: Boron, Sulfur atoms with no explicit bonds
-# - INFO: Solvent molecules present (only if also other fragments)
-# - INFO: One unknown stereocentre and no defined stereocentres (probably racemate, so info not warn)
-# - WARN: More than one undefined stereocentre and no defined stereocentres
-# - INFO: One undefined stereocentre and at least one defined stereocentre (epimer or mixture of anomers, so info not warn)
-# - WARN: More than one undefined stereocentre and at least one defined stereocentre
-# - INFO: Unknown double bond stereochemistry
-# - WARN: Ring containing stereobonds?
-# - INFO: Not canonical tautomer
-
-
-# Coordinates?
-# Info - Lack of coordinates? Uneven bond lengths?
-
-# Web services (needs to be optional)
-# Info - Could not match to ChemSpider ID, PubChem CID
-# UniChem from EBI could be useful here, otherwise use each API directly
-
-
-
-
-# Allow definition of MolSchema to set custom validations on e.g.
-
-# People can define a filterer
-# This has a series of validations, and the required output - e.g. no error or no warns?
-
+    :param string smiles: The SMILES for the molecule.
+    :returns: The SMILES for the standardized molecule.
+    :rtype: list of strings.
+    """
+    # Skip sanitize as standardize does this anyway
+    mol = Chem.MolFromSmiles(smiles.encode('utf8'))
+    logs = Validator().validate(mol)
+    return logs
