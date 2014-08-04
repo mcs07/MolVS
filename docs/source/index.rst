@@ -11,9 +11,6 @@ Building a collection of chemical structures from different sources can be diffi
 drawing conventions and mistakes. MolVS can standardize chemical structures to improve data quality, help with
 de-duplication and identify relationships between molecules.
 
-The available standardization tasks include disconnecting metals, normalizing functional groups, reionizing partially
-ionized acids, discarding salts and solvents, choosing a canonical tautomer, neutralizing charges and more.
-
 There are sensible defaults that make it easy to get started::
 
     >>> from molvs import standardize_smiles
@@ -25,7 +22,15 @@ Each standardization module is also available separately, allowing the developme
 Features
 --------
 
-TODO
+- Normalization of functional groups to a consistent format.
+- Recombination of separated charges.
+- Breaking of bonds to metal atoms.
+- Competitive reionization to ensure strongest acids ionize first in partially ionize molecules.
+- Tautomer enumeration and canonicalization.
+- Neutralization of charges.
+- Standardization or removal of stereochemistry information.
+- Filtering of salt and solvent fragments.
+- Generation of parent structures that are fragment, isotope, charge, tautomer or stereochemistry insensitive.
 
 User guide
 ----------

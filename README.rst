@@ -7,9 +7,6 @@ Building a collection of chemical structures from different sources can be diffi
 drawing conventions and mistakes. MolVS can standardize chemical structures to improve data quality, help with
 de-duplication and identify relationships between molecules.
 
-The available standardization tasks include disconnecting metals, normalizing functional groups, reionizing partially
-ionized acids, discarding salts and solvents, choosing a canonical tautomer, neutralizing charges and more.
-
 There are sensible defaults that make it easy to get started::
 
     >>> from molvs import standardize_smiles
@@ -17,6 +14,8 @@ There are sensible defaults that make it easy to get started::
     'Nc1nc(O)c2ncnc-2[nH]1'
 
 Each standardization module is also available separately, allowing the development of custom standardization processes.
+The available standardization tasks include disconnecting metals, normalizing functional groups, reionizing partially
+ionized acids, discarding salts and solvents, choosing a canonical tautomer, neutralizing charges and more.
 
 Installation
 ------------
@@ -46,14 +45,14 @@ MolVS is licensed under the `MIT license`_.
 Similar projects
 ----------------
 
-There are a number of other projects with similar goals:
+There are a number of projects with similar goals that take differing approaches:
 
-- `Francis Atkinson's Standardiser`_.
-- `RSC Chemistry Validation and Standardization Platform (CVSP)`_.
-- `PubChem Standardization Service`_.
-- `Tripod Structure standardizer`_.
-- `FDA Substance Registration System Standard Operating Procedure`_.
-- `ChemAxon Structure Standardizer`_.
+- `Francis Atkinson's Standardiser`_
+- `RSC Chemistry Validation and Standardization Platform (CVSP)`_
+- `PubChem Standardization Service`_
+- `Tripod Structure standardizer`_
+- `FDA Substance Registration System Standard Operating Procedure`_
+- `ChemAxon Structure Standardizer`_
 
 
 .. _`installation options`: http://molvs.readthedocs.org/en/latest/guide/install.html

@@ -20,7 +20,7 @@ setup(
     license=molvs.__license__,
     url='https://github.com/mcs07/MolVS',
     packages=['molvs'],
-    description='',
+    description='Molecule Validation and Standardization',
     long_description=long_description,
     keywords='chemistry cheminformatics rdkit',
     zip_safe=False,
