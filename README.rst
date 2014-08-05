@@ -1,7 +1,7 @@
 MolVS: Molecule Validation and Standardization
 ==============================================
 
-**MolVS** is a molecule validation and standardization tool, written in Python using the RDKit chemistry framework.
+**MolVS** is a molecule validation and standardization tool, written in Python using the `RDKit chemistry framework`_.
 
 Building a collection of chemical structures from different sources can be difficult due to differing representations,
 drawing conventions and mistakes. MolVS can standardize chemical structures to improve data quality, help with
@@ -12,10 +12,6 @@ There are sensible defaults that make it easy to get started::
     >>> from molvs import standardize_smiles
     >>> standardize_smiles('C2(=C1C(=NC=N1)[NH]C(=N2)N)O')
     'Nc1nc(O)c2ncnc-2[nH]1'
-
-Each standardization module is also available separately, allowing the development of custom standardization processes.
-The available standardization tasks include disconnecting metals, normalizing functional groups, reionizing partially
-ionized acids, discarding salts and solvents, choosing a canonical tautomer, neutralizing charges and more.
 
 Installation
 ------------
@@ -55,6 +51,7 @@ There are a number of projects with similar goals that take differing approaches
 - `ChemAxon Structure Standardizer`_
 
 
+.. _`RDKit chemistry framework`: http://www.rdkit.org
 .. _`installation options`: http://molvs.readthedocs.org/en/latest/guide/install.html
 .. _`source code`: https://github.com/mcs07/MolVS
 .. _`Issue Tracker`: https://github.com/mcs07/MolVS/issues

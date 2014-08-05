@@ -5,7 +5,7 @@ MolVS: Molecule Validation and Standardization
 
 .. sectionauthor:: Matt Swain <m.swain@me.com>
 
-**MolVS** is a molecule validation and standardization tool, written in Python using the RDKit chemistry framework.
+**MolVS** is a molecule validation and standardization tool, written in Python using the `RDKit chemistry framework`_.
 
 Building a collection of chemical structures from different sources can be difficult due to differing representations,
 drawing conventions and mistakes. MolVS can standardize chemical structures to improve data quality, help with
@@ -30,7 +30,8 @@ Features
 - Neutralization of charges.
 - Standardization or removal of stereochemistry information.
 - Filtering of salt and solvent fragments.
-- Generation of parent structures that are fragment, isotope, charge, tautomer or stereochemistry insensitive.
+- Generation of fragment, isotope, charge, tautomer or stereochemistry insensitive parent structures.
+- Validations to identify molecules with unusual and potentially troublesome characteristics.
 
 User guide
 ----------
@@ -38,7 +39,7 @@ User guide
 A step-by-step guide to getting started with MolVS.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    guide/intro
    guide/install
@@ -60,10 +61,4 @@ from the MolVS source code and comments.
 
    api
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-
+.. _`RDKit chemistry framework`: http://www.rdkit.org

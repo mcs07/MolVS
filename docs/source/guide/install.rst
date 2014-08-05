@@ -3,6 +3,8 @@
 Installation
 ============
 
+.. sectionauthor:: Matt Swain <m.swain@me.com>
+
 MolVS supports Python version 2.7. Once RDKit supports Python 3+, MolVS should also.
 
 There are a variety of ways to download and install MolVS.
