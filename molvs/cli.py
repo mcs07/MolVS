@@ -30,4 +30,6 @@ def main():
     args = parser.parse_args()
     print(standardize_smiles(args.smiles))
 
-# TODO: Consider separate standardize and validate command line tools
+# TODO: Consider separate standardize and validate command line tools:
+# $ molvs standardize X
+# $ molvs validate X

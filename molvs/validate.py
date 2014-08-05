@@ -1,5 +1,15 @@
 # -*- coding: utf-8 -*-
-"""validate.py"""
+"""
+molvs.validate
+~~~~~~~~~~~~~~
+
+This module contains the main :class:`~molvs.validate.Validator` class that can be used to perform all
+:class:`Validations <molvs.validations.Validation>`, as well as the :func:`~molvs.validate.validate_smiles()`
+convenience function.
+
+:copyright: Copyright 2014 by Matt Swain.
+:license: MIT, see LICENSE file for more details.
+"""
 
 from __future__ import print_function
 from __future__ import unicode_literals

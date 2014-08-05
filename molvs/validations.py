@@ -3,7 +3,7 @@
 molvs.validations
 ~~~~~~~~~~~~~~~~~
 
-
+This module contains all the built-in :class:`Validations <molvs.validations.Validation>`.
 
 :copyright: Copyright 2014 by Matt Swain.
 :license: MIT, see LICENSE file for more details.
@@ -21,7 +21,7 @@ from .fragment import REMOVE_FRAGMENTS
 
 
 class Validation(object):
-    """The base class that all `Validation` subclasses must inherit from."""
+    """The base class that all :class:`~molvs.validations.Validation` subclasses must inherit from."""
 
     def __init__(self, log):
         self.log = logging.LoggerAdapter(log, {'validation': type(self).__name__})
@@ -42,7 +42,11 @@ class Validation(object):
 
 
 class SmartsValidation(Validation):
-    """Abstract superclass for `Validations` that log a message if a SMARTS pattern matches the molecule."""
+    """Abstract superclass for :class:`Validations <molvs.validations.Validation>` that log a message if a SMARTS
+    pattern matches the molecule.
+
+    Subclasses can override the following attributes:
+    """
 
     #: The logging level of the message.
     level = logging.INFO
@@ -59,7 +63,7 @@ class SmartsValidation(Validation):
 
     @property
     def smarts(self):
-        """The SMARTS pattern as a string."""
+        """The SMARTS pattern as a string. Subclasses must implement this."""
         raise NotImplementedError('SmartsValidation subclasses must have a smarts attribute')
 
     def _check_matches(self, mol):
@@ -80,10 +84,10 @@ class SmartsValidation(Validation):
 
 
 class IsNoneValidation(Validation):
-    """Logs an error if None is passed to the Validator.
+    """Logs an error if ``None`` is passed to the Validator.
 
-    This can happen if RDKit failed to parse an input format. If the molecule is None, no subsequent validations will
-    run.
+    This can happen if RDKit failed to parse an input format. If the molecule is ``None``, no subsequent validations
+    will run.
     """
 
     def run(self, mol):
@@ -107,7 +111,8 @@ class NoAtomValidation(Validation):
 class DichloroethaneValidation(SmartsValidation):
     """Logs if 1,2-dichloroethane is present.
 
-    This is provided as an example of how to subclass `SmartsValidation` to check for the presence of a substructure.
+    This is provided as an example of how to subclass :class:`~molvs.validations.SmartsValidation` to check for the
+    presence of a substructure.
     """
     level = logging.INFO
     smarts = '[Cl]-[#6]-[#6]-[Cl]'
@@ -118,9 +123,11 @@ class DichloroethaneValidation(SmartsValidation):
 class FragmentValidation(Validation):
     """Logs if certain fragments are present.
 
-    Subclass and override the `fragments` class attribute to customize the list of `FragmentPatterns`.
+    Subclass and override the ``fragments`` class attribute to customize the list of
+    :class:`FragmentPatterns <molvs.fragment.FragmentPattern>`.
     """
 
+    #: A list of :class:`FragmentPatterns <molvs.fragment.FragmentPattern>` to check for.
     fragments = REMOVE_FRAGMENTS
 
     def run(self, mol):
@@ -154,6 +161,7 @@ class IsotopeValidation(Validation):
             self.log.info('Molecule contains isotope %s', isotope)
 
 
+#: The default list of :class:`Validations <molvs.validations.Validation>` used by :class:`~molvs.validate.Validator`.
 VALIDATIONS = (
     IsNoneValidation,
     NoAtomValidation,

@@ -57,7 +57,6 @@ The MolVS package is made up of the following modules:
    :special-members: __call__
    :members:
 
-
 .. automodule:: molvs.fragment
 .. autodata:: molvs.fragment.REMOVE_FRAGMENTS
    :annotation:
@@ -87,9 +86,34 @@ The MolVS package is made up of the following modules:
    :special-members: __call__
    :members:
 
+.. automodule:: molvs.validate
+.. autodata:: molvs.validate.SIMPLE_FORMAT
+   :annotation: = '%(levelname)s: [%(validation)s] %(message)s'
+.. autodata:: molvs.validate.LONG_FORMAT
+   :annotation: = '%(asctime)s - %(levelname)s - %(validation)s - %(message)s'
+.. autoclass:: molvs.validate.Validator(validations=VALIDATIONS, log_format=SIMPLE_FORMAT, level=logging.INFO, stdout=False, raw=False)
+   :special-members: __call__
+   :members:
+.. autofunction:: molvs.validate.validate_smiles
+
+.. automodule:: molvs.validations
+.. autodata:: molvs.validations.VALIDATIONS
+   :annotation:
+.. autoclass:: molvs.validations.Validation
+   :members:
+.. autoclass:: molvs.validations.SmartsValidation
+   :members:
+.. autoclass:: molvs.validations.IsNoneValidation
+.. autoclass:: molvs.validations.NoAtomValidation
+.. autoclass:: molvs.validations.DichloroethaneValidation
+.. autoclass:: molvs.validations.FragmentValidation
+.. autoclass:: molvs.validations.NeutralValidation
+.. autoclass:: molvs.validations.IsotopeValidation
+
 .. automodule:: molvs.cli
 
 .. automodule:: molvs.errors
 .. autoexception:: molvs.errors.MolVSError()
 .. autoexception:: molvs.errors.StandardizeError()
 .. autoexception:: molvs.errors.ValidateError()
+.. autoexception:: molvs.errors.StopValidateError()

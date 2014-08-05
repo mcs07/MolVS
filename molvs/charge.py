@@ -32,7 +32,7 @@ class AcidBasePair(object):
     """
 
     def __init__(self, name, acid, base):
-        """Initialize an AcidBasePair.
+        """Initialize an AcidBasePair with the following parameters:
 
         :param string name: A name for this AcidBasePair.
         :param string acid: SMARTS pattern for the protonated acid.
@@ -103,9 +103,10 @@ class Reionizer(object):
     """A class to reionize a molecule such that the strongest acids ionize first."""
 
     def __init__(self, acid_base_pairs=ACID_BASE_PAIRS):
-        """
+        """Initialize a Reionizer with the following parameter:
 
-        :param acid_base_pairs: A list of :class:`AcidBasePairs` to reionize, sorted from strongest to weakest.
+        :param acid_base_pairs: A list of :class:`AcidBasePairs <molvs.charge.AcidBasePair>` to reionize, sorted from
+                                strongest to weakest.
         """
         log.debug('Initializing Reionizer')
         self.acid_base_pairs = acid_base_pairs

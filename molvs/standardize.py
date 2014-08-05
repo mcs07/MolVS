@@ -4,7 +4,7 @@ molvs.standardize
 ~~~~~~~~~~~~~~~~~
 
 This module contains the main :class:`~molvs.standardize.Standardizer` class that can be used to perform all
-standardization tasks, as well convenience functions like :func:`~molvs.standardize.standardize_smiles` for common
+standardization tasks, as well as convenience functions like :func:`~molvs.standardize.standardize_smiles` for common
 standardization tasks.
 
 :copyright: Copyright 2014 by Matt Swain.
