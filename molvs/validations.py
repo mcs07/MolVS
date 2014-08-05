@@ -34,7 +34,7 @@ class Validation(object):
             if isinstance(e, StopValidateError):
                 raise e
             else:
-                self.log.error('Validation failed: %s', e)
+                self.log.debug('Validation failed: %s', e)
 
     def run(self, mol):
         """"""
