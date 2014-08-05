@@ -60,10 +60,17 @@ class LogHandler(logging.Handler):
 
 
 class Validator(object):
-    """"""
+    """The main class for running :class:`Validations <molvs.validations.Validation>` on molecules."""
 
     def __init__(self, validations=VALIDATIONS, log_format=SIMPLE_FORMAT, level=logging.INFO, stdout=False, raw=False):
-        """"""
+        """Initialize a Validator with the following parameters:
+
+        :param validations: A list of Validations to apply (default: :data:`~molvs.validations.VALIDATIONS`).
+        :param string log_format: A string format (default: :data:`~molvs.validate.SIMPLE_FORMAT`).
+        :param level: The minimum logging level to output.
+        :param bool stdout: Whether to send log messages to standard output.
+        :param bool raw: Whether to return raw :class:`~logging.LogRecord` objects instead of formatted log strings.
+        """
         self.raw = raw
         # Set up logger and add default LogHandler
         self.log = logging.getLogger(type(self).__name__)
@@ -105,7 +112,7 @@ def validate_smiles(smiles):
     are needed.
 
     :param string smiles: The SMILES for the molecule.
-    :returns: The SMILES for the standardized molecule.
+    :returns: A list of log messages.
     :rtype: list of strings.
     """
     # Skip sanitize as standardize does this anyway
