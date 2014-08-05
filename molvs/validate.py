@@ -69,6 +69,11 @@ class Validator(object):
         # Instantiate the validations
         self.validations = [validation(self.log) for validation in validations]
 
+    def __call__(self, mol):
+        """Calling a Validator instance like a function is the same as calling its
+        :meth:`~molvs.validate.Validator.validate` method."""
+        return self.validate(mol)
+
     def validate(self, mol):
         """"""
         # Clear any log messages from previous runs
