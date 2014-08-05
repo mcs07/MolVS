@@ -20,12 +20,12 @@ def test_none():
 
 def test_dichloroethane():
     """"""
-    eq_(validate_smiles('ClCCCl.c1ccccc1O'), [u'INFO: [DichloroethaneValidation] 1,2-Dichloroethane is present'])
+    eq_(validate_smiles('ClCCCl.c1ccccc1O'), [u'INFO: [FragmentValidation] 1,2-dichloroethane is present'])
 
 
 def test_dimethoxyethane():
     """"""
-    eq_(validate_smiles('COCCOC.CCCBr'), [u'INFO: [DimethoxyethaneValidation] 1,2-Dimethoxyethane is present'])
+    eq_(validate_smiles('COCCOC.CCCBr'), [u'INFO: [FragmentValidation] 1,2-dimethoxyethane is present'])
 
 
 if __name__ == '__main__':

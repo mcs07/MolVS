@@ -17,7 +17,7 @@ import logging
 from rdkit import Chem
 
 from .errors import StopValidateError
-from .fragment import FragmentPattern
+from .fragment import REMOVE_FRAGMENTS
 
 
 class Validation(object):
@@ -28,6 +28,7 @@ class Validation(object):
 
     def __call__(self, mol):
         try:
+            self.log.debug('Running %s', type(self).__name__)
             self.run(mol)
         except Exception as e:
             if isinstance(e, StopValidateError):
@@ -72,7 +73,6 @@ class SmartsValidation(Validation):
             self.log.log(self.level, self.message, {'smarts': self.smarts})
 
     def run(self, mol):
-        self.log.debug('Running %s', type(self).__name__)
         if self.entire_fragment:
             self._check_matches_fragment(mol)
         else:
@@ -87,7 +87,6 @@ class IsNoneValidation(Validation):
     """
 
     def run(self, mol):
-        self.log.debug('Running IsNoneValidation')
         if mol is None:
             self.log.error('Molecule is None')
             raise StopValidateError()
@@ -100,33 +99,45 @@ class NoAtomValidation(Validation):
     """
 
     def run(self, mol):
-        self.log.debug('Running NoAtomValidation')
         if mol.GetNumAtoms() == 0:
             self.log.warning('No atoms are present')
             raise StopValidateError()
 
 
 class DichloroethaneValidation(SmartsValidation):
-    """Validation to check if 1,2-Dichloroethane is present."""
+    """Validation to check if 1,2-dichloroethane is present.
+
+    This is provided as an example of how to subclass `SmartsValidation` to check for the presence of a substructure.
+    """
     level = logging.INFO
     smarts = '[Cl]-[#6]-[#6]-[Cl]'
     entire_fragment = True
     message = '1,2-Dichloroethane is present'
 
 
-class DimethoxyethaneValidation(SmartsValidation):
-    """Validation to check if 1,2-Dimethoxyethane is present."""
-    level = logging.INFO
-    smarts = '[#6]-[#8]-[#6]-[#6]-[#8]-[#6]'
-    entire_fragment = True
-    message = '1,2-Dimethoxyethane is present'
+class FragmentValidation(Validation):
+    """Validation to check if certain fragments are present.
+
+    Subclass and override the `fragments` class attribute to customize the list of `FragmentPatterns`.
+    """
+
+    fragments = REMOVE_FRAGMENTS
+
+    def run(self, mol):
+        for fp in self.fragments:
+            matches = frozenset(frozenset(match) for match in mol.GetSubstructMatches(fp.smarts))
+            fragments = frozenset(frozenset(frag) for frag in Chem.GetMolFrags(mol))
+            if matches & fragments:
+                self.log.info('%s is present', fp.name)
+
+
 
 
 VALIDATIONS = (
     IsNoneValidation,
     NoAtomValidation,
-    DichloroethaneValidation,
-    DimethoxyethaneValidation,
+    #DichloroethaneValidation,
+    FragmentValidation,
 )
 
 
