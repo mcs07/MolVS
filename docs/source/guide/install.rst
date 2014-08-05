@@ -7,6 +7,15 @@ Installation
 
 MolVS supports Python version 2.7. Once RDKit supports Python 3+, MolVS should also.
 
+.. note::
+
+   MolVS requires RDKit to be installed. On Mac OS X, this is easiest with Homebrew::
+
+       brew tap mcs07/cheminformatics
+       brew install rdkit
+
+   The official RDKit documentation has `installation instructions for a variety of platforms`_.
+
 There are a variety of ways to download and install MolVS.
 
 Option 1: Use pip (recommended)
@@ -19,10 +28,12 @@ The easiest and recommended way to install is using pip::
 This will download the latest version of MolVS, and place it in your `site-packages` folder so it is automatically
 available to all your python scripts.
 
-If you don't already have pip installed, you can `install it using get-pip.py`_::
+.. note::
 
-       curl -O https://raw.github.com/pypa/pip/master/contrib/get-pip.py
-       python get-pip.py
+   If you don't already have pip installed, you can `install it using get-pip.py`_::
+
+          curl -O https://raw.github.com/pypa/pip/master/contrib/get-pip.py
+          python get-pip.py
 
 Option 2: Download the latest release
 -------------------------------------
@@ -46,6 +57,7 @@ stable, but may include new features that have not yet been released. Simply clo
     cd MolVS
     python setup.py install
 
+.. _`installation instructions for a variety of platforms`: http://www.rdkit.org/docs/Install.html
 .. _`install it using get-pip.py`: http://www.pip-installer.org/en/latest/installing.html
 .. _`download the latest release`: https://github.com/mcs07/MolVS/releases/
 .. _`available on GitHub`: https://github.com/mcs07/MolVS
