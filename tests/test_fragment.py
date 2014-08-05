@@ -27,7 +27,7 @@ def fragment_parent_smiles(smiles, prefer_organic=False):
 
 def fragment_removal_smiles(smiles, leave_last=True):
     """Utility function that returns the result SMILES after FragmentRemover is applied to given a SMILES string."""
-    mol = Chem.MolFromSmiles(smiles.encode('utf8'), sanitize=False)
+    mol = Chem.MolFromSmiles(smiles.encode('utf8'))
     mol = FragmentRemover(leave_last=leave_last).remove(mol)
     return Chem.MolToSmiles(mol, isomericSmiles=True)
 
@@ -133,8 +133,23 @@ def test_fragment_removal8():
 
 
 def test_fragment_removal9():
-    """."""
+    """Test multiple fragment removal."""
     eq_(fragment_removal_smiles('[Na+].OC(=O)Cc1ccc(CN)cc1.OS(=O)(=O)C(F)(F)F'), 'NCc1ccc(CC(=O)O)cc1')
+
+
+def test_fragment_removal10():
+    """1,4-Dioxane should be removed."""
+    eq_(fragment_removal_smiles('c1ccccc1O.O1CCOCC1'), 'Oc1ccccc1')
+
+
+def test_fragment_removal11():
+    """Benzene should be removed."""
+    eq_(fragment_removal_smiles('c1ccccc1.CCCBr'), 'CCCBr')
+
+
+def test_fragment_removal12():
+    """Various fragments should be removed should be removed."""
+    eq_(fragment_removal_smiles('CC(NC1=CC=C(O)C=C1)=O.CCCCC.O.CCO.CCCO.C1CCCCC1.C1CCCCCC1'), 'CC(=O)Nc1ccc(O)cc1')
 
 
 if __name__ == '__main__':
