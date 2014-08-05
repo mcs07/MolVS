@@ -21,7 +21,7 @@ from .fragment import REMOVE_FRAGMENTS
 
 
 class Validation(object):
-    """The base class that all Validations must inherit from."""
+    """The base class that all `Validation` subclasses must inherit from."""
 
     def __init__(self, log):
         self.log = logging.LoggerAdapter(log, {'validation': type(self).__name__})
@@ -42,7 +42,7 @@ class Validation(object):
 
 
 class SmartsValidation(Validation):
-    """Abstract class for Validations that log a message if a SMARTS pattern matches the molecule."""
+    """Abstract superclass for `Validations` that log a message if a SMARTS pattern matches the molecule."""
 
     #: The logging level of the message.
     level = logging.INFO
@@ -80,7 +80,7 @@ class SmartsValidation(Validation):
 
 
 class IsNoneValidation(Validation):
-    """Validation to check whether None is passed to the Validator.
+    """Logs an error if None is passed to the Validator.
 
     This can happen if RDKit failed to parse an input format. If the molecule is None, no subsequent validations will
     run.
@@ -93,19 +93,19 @@ class IsNoneValidation(Validation):
 
 
 class NoAtomValidation(Validation):
-    """Validation to check whether the molecule has zero atoms.
+    """Logs an error if the molecule has zero atoms.
 
     If the molecule has no atoms, no subsequent validations will run.
     """
 
     def run(self, mol):
         if mol.GetNumAtoms() == 0:
-            self.log.warning('No atoms are present')
+            self.log.error('No atoms are present')
             raise StopValidateError()
 
 
 class DichloroethaneValidation(SmartsValidation):
-    """Validation to check if 1,2-dichloroethane is present.
+    """Logs if 1,2-dichloroethane is present.
 
     This is provided as an example of how to subclass `SmartsValidation` to check for the presence of a substructure.
     """
@@ -116,7 +116,7 @@ class DichloroethaneValidation(SmartsValidation):
 
 
 class FragmentValidation(Validation):
-    """Validation to check if certain fragments are present.
+    """Logs if certain fragments are present.
 
     Subclass and override the `fragments` class attribute to customize the list of `FragmentPatterns`.
     """
@@ -131,6 +131,27 @@ class FragmentValidation(Validation):
                 self.log.info('%s is present', fp.name)
 
 
+class NeutralValidation(Validation):
+    """Logs if not an overall neutral system."""
+
+    def run(self, mol):
+        charge = Chem.GetFormalCharge(mol)
+        if not charge == 0:
+            chargestring = '+%s' % charge if charge > 0 else '%s' % charge
+            self.log.info('Not an overall neutral system (%s)', chargestring)
+
+
+class IsotopeValidation(Validation):
+    """Logs if molecule contains isotopes."""
+
+    def run(self, mol):
+        isotopes = set()
+        for atom in mol.GetAtoms():
+            isotope = atom.GetIsotope()
+            if not isotope == 0:
+                isotopes.add('%s%s' % (isotope, atom.GetSymbol()))
+        for isotope in isotopes:
+            self.log.info('Molecule contains isotope %s', isotope)
 
 
 VALIDATIONS = (
@@ -138,13 +159,13 @@ VALIDATIONS = (
     NoAtomValidation,
     #DichloroethaneValidation,
     FragmentValidation,
+    NeutralValidation,
+    IsotopeValidation,
 )
 
 
 
 # - WARN/ERROR: Are all atoms defined/real - no query atoms or invalid elements, r-group things
-# - INFO: Not an overall neutral system
-# - INFO: Contains isotopes
 # - INFO: Contains unknown stereo (Perform stereochemistry perception first?)
 # - INFO: Nonstandard tautomer (log SMILES of tautomer parent, or the name of the tautomer transform?)
 # - WARN: InChI generation failed
