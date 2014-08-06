@@ -67,7 +67,7 @@ Tips
 - Try and include tests that cover your changes.
 - Try to write `good commit messages`_.
 - Consider `squashing your commits`_ with rebase.
-- Read the GitHub help page on `Using pull requests`_
+- Read the GitHub help page on `Using pull requests`_.
 
 .. _`Issue Tracker`: https://github.com/mcs07/MolVS/issues
 .. _`source code`: https://github.com/mcs07/MolVS
