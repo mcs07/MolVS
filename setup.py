@@ -8,7 +8,11 @@ from setuptools import setup
 if os.path.exists('README.rst'):
     long_description = open('README.rst').read()
 else:
-    long_description = ''''''
+    long_description = '''MolVS is a molecule validation and standardization tool, written in Python using the RDKit
+chemistry framework. Building a collection of chemical structures from different sources can be difficult due to
+differing representations, drawing conventions and mistakes. MolVS can standardize chemical structures to improve data
+quality, help with de-duplication and identify relationships between molecules.
+'''
 
 setup(
     name='MolVS',
