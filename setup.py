@@ -4,8 +4,6 @@
 import os
 from setuptools import setup
 
-import molvs
-
 
 if os.path.exists('README.rst'):
     long_description = open('README.rst').read()
@@ -14,10 +12,10 @@ else:
 
 setup(
     name='MolVS',
-    version=molvs.__version__,
-    author=molvs.__author__,
-    author_email=molvs.__email__,
-    license=molvs.__license__,
+    version='0.0.1',
+    author='Matt Swain',
+    author_email='m.swain@me.com',
+    license='MIT',
     url='https://github.com/mcs07/MolVS',
     packages=['molvs'],
     description='Molecule Validation and Standardization',
