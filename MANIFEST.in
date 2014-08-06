@@ -1,2 +1,5 @@
 include README.rst
 include LICENSE
+recursive-include tests *.py
+recursive-include docs *
+prune docs/build
