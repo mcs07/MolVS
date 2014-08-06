@@ -211,19 +211,19 @@ class Uncharger(object):
                     atom.SetNumExplicitHs(atom.GetNumExplicitHs() + 1)
                     atom.SetFormalCharge(atom.GetFormalCharge() + 1)
                     neg_surplus -= 1
-                    logging.info('Removed negative charge')
+                    log.info('Removed negative charge')
         else:
             #
             for atom in [mol.GetAtomWithIdx(x) for x in n]:
                 while atom.GetFormalCharge() < 0:
                     atom.SetNumExplicitHs(atom.GetNumExplicitHs() + 1)
                     atom.SetFormalCharge(atom.GetFormalCharge() + 1)
-                    logging.info('Removed negative charge')
+                    log.info('Removed negative charge')
         # Neutralize positive charges
         for atom in [mol.GetAtomWithIdx(x) for x in p]:
             # Remove hydrogen and reduce formal change until neutral or no more hydrogens
             while atom.GetFormalCharge() > 0 and atom.GetNumExplicitHs() > 0:
                 atom.SetNumExplicitHs(atom.GetNumExplicitHs() - 1)
                 atom.SetFormalCharge(atom.GetFormalCharge() - 1)
-                logging.info('Removed positive charge')
+                log.info('Removed positive charge')
         return mol

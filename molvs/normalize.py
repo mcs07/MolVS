@@ -118,21 +118,32 @@ class Normalizer(object):
         :rtype: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
         """
         log.debug('Running Normalizer')
+        # Normalize each fragment separately to get around quirky RunReactants behaviour
+        fragments = []
+        for fragment in Chem.GetMolFrags(mol, asMols=True):
+            fragments.append(self._normalize_fragment(fragment))
+        # Join normalized fragments into a single molecule again
+        outmol = fragments.pop()
+        for fragment in fragments:
+            outmol = Chem.CombineMols(outmol, fragment)
+        Chem.SanitizeMol(outmol)
+        return outmol
+
+    def _normalize_fragment(self, mol):
         for n in xrange(self.max_restarts):
             # Iterate through Normalization transforms and apply each in order
             for normalization in self.normalizations:
                 product = self._apply_transform(mol, normalization.transform)
                 if product:
                     # If transform changed mol, go back to first rule and apply each again
-                    logging.info('Rule applied: %s', normalization.name)
+                    log.info('Rule applied: %s', normalization.name)
                     mol = product
                     break
             else:
                 # For loop finishes normally, all applicable transforms have been applied
                 return mol
         # If we're still going after max_restarts (default 200), stop and warn, but still return the mol
-        logging.warn('Gave up normalization after %s restarts', self.max_restarts)
-        Chem.SanitizeMol(mol)
+        log.warn('Gave up normalization after %s restarts', self.max_restarts)
         return mol
 
     def _apply_transform(self, mol, rule):

@@ -153,6 +153,12 @@ def test_amidinium_normalization():
     eq_(standardize_smiles('[C+](C)(N)N'), 'CC(N)=[NH2+]')
 
 
+def test_multi_fragment_normalization():
+    """All fragments should stay if one gets transformed by normalization."""
+    eq_(standardize_smiles('[Na]OC(=O)c1ccc(C[S+2]([O-])([O-]))cc1'), '[Na+].O=C([O-])c1ccc(CS(=O)=O)cc1')
+    eq_(standardize_smiles('[Na+].[O-]C(=O)c1ccc(C[S+2]([O-])([O-]))cc1'), '[Na+].O=C([O-])c1ccc(CS(=O)=O)cc1')
+
+
 def test_1_3_nonaromatic_charge_recombination():
     """Recombine non-aromatic 1,3-separated charges."""
     eq_(standardize_smiles('C[N-]C(C)=[N+](C)C'), 'CN=C(C)N(C)C')
