@@ -49,6 +49,8 @@ A step-by-step guide to getting started with MolVS.
    guide/tautomer
    guide/fragment
    guide/charge
+   guide/cli
+   guide/contributing
 
 API documentation
 -----------------
