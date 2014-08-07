@@ -11,13 +11,11 @@ This page gives details on tautomer enumeration and canonicalization.
 Tautomer enumeration
 --------------------
 
-
+- All possible tautomers are generated using a series of transform rules.
+- Remove stereochemistry from double bonds that are single in at least 1 tautomer.
 
 Tautomer canonicalization
 -------------------------
 
 - Enumerate all possible tautomers using transform rules.
 - Use scoring system to determine canonical tautomer.
-- After tautomer canonicalization, need to clean up stereochemistry:
-- Remove stereochemistry from double bonds that are single in at least 1 tautomer
-- TODO: Remove tetrahedral stereochemistry from sp3 atoms that are sp2 in at least 1 tautomer? (thalidomide?)

@@ -7,17 +7,15 @@ Fragments
 
 This page gives details on dealing with fragments.
 
+The term fragment refers to covalently bonded units. A molecule can contain multiple fragments.
+
 
 Getting the largest fragment
 ----------------------------
 
-
+- LargestFragmentChooser
 
 Filtering out fragments
 -----------------------
 
-Remove solvents
-~~~~~~~~~~~~~~~
-
-- TODO: remove water, methanol, ethanol, dichloromethane, chloroform, diethyl ether, diisopropylether, tetrahydrofuran,
-   acetone, dimethylsulfoxide, ethyl acetate, dimethylformamide, acetonitrile, benzene
+- FragmentRemover

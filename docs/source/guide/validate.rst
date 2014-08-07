@@ -8,6 +8,9 @@ Validation
 The MolVS :class:`~molvs.metal.Validator` provides a way to identify and log unusual and potentially troublesome
 characteristics of a molecule.
 
+The validation process makes no actual changes to a molecule – that is left to the standardization process, which fixes
+many of the issues identified through validation. There is no real requirement to validate a molecule before or after
+standardizing it - the process simply provides additional information about potential problems.
 
 Validating a molecule
 ---------------------

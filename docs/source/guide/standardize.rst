@@ -40,6 +40,8 @@ multiple molecules::
 The standardization process
 ---------------------------
 
+TODO: Explain this properly...
+
 RDKit Sanitize
 ~~~~~~~~~~~~~~
 
@@ -47,7 +49,7 @@ RDKit Sanitize
 - Nitro N#O: ``C-N=N#N >> C-N=[N+]=[N-]``
 - Perchlorate: ``Cl(=O)(=O)(=O)[O-] >> [Cl+3]([O-])([O-])([O-])[O-]``
 - Calculate explicit and implicit valence of all atoms. Fails when atoms have illegal valence.
-- Calculate symmetrized SSSR. Slowest step, fails in rare cases (apparently).
+- Calculate symmetrized SSSR. Slowest step, fails in rare cases.
 - Kekulize.  Fails if a Kekule form cannot be found or non-ring bonds are marked as aromatic.
 - Assign radicals if hydrogens set and bonds+hydrogens+charge < valence.
 - Set aromaticity, if none set in input. Go round rings, Huckel rule to set atoms+bonds as aromatic.
@@ -58,9 +60,8 @@ RDKit Sanitize
 RDKit RemoveHs
 ~~~~~~~~~~~~~~
 
-- RDKit implementation detail - this seems to be the preferred way to store the molecule.
+- RDKit implementation detail - this is the preferred way to store the molecule.
 - Remove explicit H count from atoms, instead infer it on the fly from valence model.
-- TODO: Remove certain hydrogens from molecular graph if no up/down bond from bonded atom, set as count instead?
 
 Disconnect metals
 ~~~~~~~~~~~~~~~~~
@@ -73,7 +74,7 @@ Disconnect metals
 Apply normalization rules
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- A series of transformations to correct common drawing errors and standardize functional groups.
+- A series of transformations to correct common drawing errors and standardize functional groups. Includes:
 - Uncharge-separate sulfones
 - Charge-separate nitro groups
 - Charge-separate pyridine oxide
@@ -81,7 +82,6 @@ Apply normalization rules
 - Charge-separate diazo and azo groups
 - Charge-separate sulfoxides
 - Hydrazine-diazonium system
-- TODO: Find canonical resonance/protonation state for charged fragments?
 
 Reionize acids
 ~~~~~~~~~~~~~~
@@ -93,3 +93,8 @@ The algorithm works as follows:
 
 - Use SMARTS to find the strongest protonated acid and the weakest ionized acid.
 - If the ionized acid is weaker than the protonated acid, swap proton and repeat.
+
+Recalculate stereochemistry
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Use built-in RDKit functionality to force a clean recalculation of stereochemistry

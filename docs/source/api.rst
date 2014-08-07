@@ -96,6 +96,7 @@ The MolVS package is made up of the following modules:
    :members:
 .. autofunction:: molvs.validate.validate_smiles
 
+.. _molvs_validations:
 .. automodule:: molvs.validations
 .. autodata:: molvs.validations.VALIDATIONS
    :annotation:
