@@ -10,8 +10,8 @@ de-duplication and identify relationships between molecules.
 There are sensible defaults that make it easy to get started::
 
     >>> from molvs import standardize_smiles
-    >>> standardize_smiles('C2(=C1C(=NC=N1)[NH]C(=N2)N)O')
-    'Nc1nc(O)c2ncnc-2[nH]1'
+    >>> standardize_smiles('[Na]OC(=O)c1ccc(C[S+2]([O-])([O-]))cc1')
+    '[Na+].O=C([O-])c1ccc(CS(=O)=O)cc1'
 
 Installation
 ------------

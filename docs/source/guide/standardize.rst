@@ -11,9 +11,31 @@ This page gives details on the standardization process.
 Standardizing a molecule
 ------------------------
 
-TODO: How to guide for standardization
+The ``standardize_smiles`` function provides a quick and easy way to get the standardized version of a given SMILES
+string::
 
+    >>> from molvs import standardize_smiles
+    >>> standardize_smiles('C[n+]1c([N-](C))cccc1')
+    'CN=c1ccccn1C'
 
+While this is convenient for one-off cases, it's inefficient when dealing with multiple molecules and doesn't allow any
+customization of the standardization process.
+
+The ``Standardizer`` class provides flexibility to specify custom standardization stages and efficiently standardize
+multiple molecules::
+
+    >>> from rdkit import Chem
+    >>> mol = Chem.MolFromSmiles('[Na]OC(=O)c1ccc(C[S+2]([O-])([O-]))cc1')
+
+.. image:: ../_images/mol1.png
+
+::
+
+    >>> from molvs import Standardizer
+    >>> s = Standardizer()
+    >>> smol = s.standardize(mol)
+
+.. image:: ../_images/mol1s.png
 
 The standardization process
 ---------------------------
