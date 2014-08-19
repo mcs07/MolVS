@@ -1,0 +1,23 @@
+language: python
+python:
+ - "2.7"
+before_install:
+ - sudo apt-get update -qq
+ - wget http://repo.continuum.io/miniconda/Miniconda-3.5.5-Linux-x86_64.sh -O miniconda.sh;
+ - bash miniconda.sh -b -p $HOME/conda
+ - export PATH="$HOME/conda/bin:$PATH"
+ - hash -r
+ - conda config --set always_yes yes --set changeps1 no
+ - conda update -q conda
+ - conda info -a
+ - conda create -q -n tenv python=$TRAVIS_PYTHON_VERSION pip cmake
+ - source activate tenv
+install:
+ - sudo apt-get install -qq build-essential
+ - conda install -q numpy
+ - conda install -q -c rdkit rdkit
+  - pip install coveralls
+script:
+  - coverage run --source=molvs setup.py test
+after_success:
+  - coveralls
