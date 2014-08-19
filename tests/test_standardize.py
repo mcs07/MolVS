@@ -279,5 +279,10 @@ def test_charge_preservation2():
     eq_(standardize_smiles('[Cl-].C[NH+](C)C'), '[Cl-].C[NH+](C)C')
 
 
+def test_disconnect_metal6():
+    """"""
+    eq_(standardize_smiles('C1(CCCCC1)[Zn]Br'), '[Zn+2].[Br-].[CH-]1CCCCC1')
+
+
 if __name__ == '__main__':
     nose.main()
