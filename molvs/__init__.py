@@ -16,7 +16,7 @@ import logging
 
 
 __title__ = 'MolVS'
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 __author__ = 'Matt Swain'
 __email__ = 'm.swain@me.com'
 __license__ = 'MIT'
