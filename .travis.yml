@@ -16,7 +16,7 @@ install:
  - sudo apt-get install -qq build-essential
  - conda install -q numpy
  - conda install -q -c rdkit rdkit
-  - pip install coveralls
+ - pip install coveralls
 script:
   - coverage run --source=molvs setup.py test
 after_success:
