@@ -1,19 +1,25 @@
 language: python
 python:
  - "2.7"
+ - "3.4"
+sudo: false
 before_install:
- - sudo apt-get update -qq
- - wget http://repo.continuum.io/miniconda/Miniconda-3.5.5-Linux-x86_64.sh -O miniconda.sh;
+ - wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
  - bash miniconda.sh -b -p $HOME/conda
  - export PATH="$HOME/conda/bin:$PATH"
  - hash -r
  - conda config --set always_yes yes --set changeps1 no
  - conda update -q conda
  - conda info -a
- - conda create -q -n tenv python=$TRAVIS_PYTHON_VERSION pip cmake numpy nose
+ - conda create -q -n tenv python=$TRAVIS_PYTHON_VERSION pip cmake nose
  - source activate tenv
+addons:
+ apt:
+  packages:
+    - build-essential
+    - libjpeg-dev
 install:
- - sudo apt-get install -qq build-essential
+ - conda install -q numpy pillow pandas
  - conda install -q -c rdkit rdkit
  - pip install coveralls
 script:
