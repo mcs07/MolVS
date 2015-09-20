@@ -20,7 +20,7 @@ addons:
     - libjpeg-dev
 install:
  - conda install -q numpy pillow pandas
- - conda install -q -c rdkit rdkit
+ - conda install -q -c rdkit boost=1.55.0 rdkit
  - pip install coveralls
 script:
   - coverage run --source=molvs setup.py test
