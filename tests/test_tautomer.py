@@ -9,10 +9,8 @@ import logging
 
 import nose
 from nose.tools import eq_
-from rdkit import Chem
 
-from molvs.standardize import Standardizer, enumerate_tautomers_smiles, canonicalize_tautomer_smiles
-from molvs.tautomer import TautomerEnumerator, TautomerCanonicalizer
+from molvs.standardize import enumerate_tautomers_smiles, canonicalize_tautomer_smiles
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -50,7 +48,7 @@ def test_phenylpropanone_keto_enol_enumeration():
 
 def test_1_5_keto_enol_enumeration():
     """1,5 keto/enol tautomer"""
-    eq_(enumerate_tautomers_smiles('Oc1nccc2cc[nH]c(=N)c12'), {'Nc1nccc2ccnc(O)c12', 'N=c1nccc2cc[nH]c(O)c1-2', 'Nc1[nH]ccc2ccnc(=O)c1-2', 'N=c1[nH]ccc2ccnc(O)c21', 'Nc1nccc2cc[nH]c(=O)c12', 'N=c1[nH]ccc2cc[nH]c(=O)c21'})
+    eq_(enumerate_tautomers_smiles('Oc1nccc2cc[nH]c(=N)c12'), {'Nc1nccc2ccnc(O)c12', 'N=c1[nH]ccc2ccnc(O)c12', 'Nc1[nH]ccc2ccnc(=O)c1-2', 'Nc1nccc2cc[nH]c(=O)c12', 'N=c1[nH]ccc2cc[nH]c(=O)c12', 'N=c1nccc2cc[nH]c(O)c1-2'})
 
 
 def test_1_5_keto_enol_enumeration2():
@@ -155,7 +153,7 @@ def test_1_5_aromatic_heteroatom_enumeration5():
 
 def test_1_5_aromatic_heteroatom_enumeration6():
     """1,5 aromatic heteroatom H shift"""
-    eq_(enumerate_tautomers_smiles('Oc1c(cccc3)c3nc2ccncc12'), {'Oc1c2ccccc2nc2ccncc12', 'O=c1c2ccccc2nc2cc[nH]cc1-2', 'O=c1c2ccccc2[nH]c2ccncc21'})
+    eq_(enumerate_tautomers_smiles('Oc1c(cccc3)c3nc2ccncc12'), {'Oc1c2ccccc2nc2ccncc12', 'O=c1c2ccccc2[nH]c2ccncc12', 'O=c1c2c[nH]ccc-2nc2ccccc12'})
 
 
 def test_1_3_1_5_aromatic_heteroatom_enumeration():
@@ -165,12 +163,12 @@ def test_1_3_1_5_aromatic_heteroatom_enumeration():
 
 def test_1_5_aromatic_heteroatom_enumeration7():
     """1,5 aromatic heteroatom H shift"""
-    eq_(enumerate_tautomers_smiles('C2(=C1C(=NC=N1)[NH]C(=N2)N)O'), {'N=c1[nH]c2ncnc-2c(O)[nH]1', 'Nc1nc2nc[nH]c2c(O)n1', 'N=c1nc(O)c2nc[nH]c2[nH]1', 'N=c1[nH]c2[nH]cnc2c(=O)[nH]1', 'Nc1nc2ncnc-2c(O)[nH]1', 'N=c1nc2nc[nH]c2c(O)[nH]1', 'N=c1nc(O)c2[nH]cnc2[nH]1', 'Nc1nc(O)c2ncnc-2[nH]1', 'Nc1nc(=O)c2nc[nH]c2[nH]1', 'Nc1nc(=O)c2[nH]cnc2[nH]1', 'Nc1nc2[nH]cnc2c(O)n1', 'N=c1nc2[nH]cnc2c(O)[nH]1', 'Nc1nc2[nH]cnc2c(=O)[nH]1', 'Nc1nc2nc[nH]c2c(=O)[nH]1', 'N=c1[nH]c2nc[nH]c2c(=O)[nH]1'})
+    eq_(enumerate_tautomers_smiles('C2(=C1C(=NC=N1)[NH]C(=N2)N)O'), {'N=c1[nH]c2ncnc-2c(O)[nH]1', 'Nc1nc(O)c2ncnc-2[nH]1', 'N=c1nc(O)c2nc[nH]c2[nH]1', 'Nc1nc2ncnc-2c(O)[nH]1', 'N=c1nc2nc[nH]c2c(O)[nH]1', 'N=c1[nH]c(=O)c2nc[nH]c2[nH]1', 'N=c1nc(O)c2[nH]cnc2[nH]1', 'N=c1[nH]c(=O)c2[nH]cnc2[nH]1', 'Nc1nc(=O)c2nc[nH]c2[nH]1', 'Nc1nc(O)c2nc[nH]c2n1', 'Nc1nc(=O)c2[nH]cnc2[nH]1', 'N=c1nc2[nH]cnc2c(O)[nH]1', 'Nc1nc2[nH]cnc2c(=O)[nH]1', 'Nc1nc2nc[nH]c2c(=O)[nH]1', 'Nc1nc(O)c2[nH]cnc2n1'})
 
 
 def test_1_5_aromatic_heteroatom_enumeration8():
     """1,5 aromatic heteroatom H shift"""
-    eq_(enumerate_tautomers_smiles('C2(C1=C([NH]C=N1)[NH]C(=N2)N)=O'), {'N=c1[nH]c2ncnc-2c(O)[nH]1', 'Nc1nc2nc[nH]c2c(O)n1', 'N=c1nc(O)c2nc[nH]c2[nH]1', 'N=c1[nH]c2[nH]cnc2c(=O)[nH]1', 'Nc1nc2ncnc-2c(O)[nH]1', 'N=c1nc2nc[nH]c2c(O)[nH]1', 'N=c1nc(O)c2[nH]cnc2[nH]1', 'Nc1nc(O)c2ncnc-2[nH]1', 'Nc1nc(=O)c2nc[nH]c2[nH]1', 'Nc1nc(=O)c2[nH]cnc2[nH]1', 'Nc1nc2[nH]cnc2c(O)n1', 'N=c1nc2[nH]cnc2c(O)[nH]1', 'Nc1nc2[nH]cnc2c(=O)[nH]1', 'Nc1nc2nc[nH]c2c(=O)[nH]1', 'N=c1[nH]c2nc[nH]c2c(=O)[nH]1'})
+    eq_(enumerate_tautomers_smiles('C2(C1=C([NH]C=N1)[NH]C(=N2)N)=O'), {'N=c1[nH]c2ncnc-2c(O)[nH]1', 'Nc1nc(O)c2ncnc-2[nH]1', 'N=c1nc(O)c2nc[nH]c2[nH]1', 'Nc1nc2ncnc-2c(O)[nH]1', 'N=c1nc2nc[nH]c2c(O)[nH]1', 'N=c1[nH]c(=O)c2nc[nH]c2[nH]1', 'N=c1nc(O)c2[nH]cnc2[nH]1', 'N=c1[nH]c(=O)c2[nH]cnc2[nH]1', 'Nc1nc(=O)c2nc[nH]c2[nH]1', 'Nc1nc(O)c2nc[nH]c2n1', 'Nc1nc(=O)c2[nH]cnc2[nH]1', 'N=c1nc2[nH]cnc2c(O)[nH]1', 'Nc1nc2[nH]cnc2c(=O)[nH]1', 'Nc1nc2nc[nH]c2c(=O)[nH]1', 'Nc1nc(O)c2[nH]cnc2n1'})
 
 
 def test_1_5_aromatic_heteroatom_enumeration9():
@@ -200,22 +198,22 @@ def test_1_5_aromatic_heteroatom_enumeration13():
 
 def test_1_7_aromatic_heteroatom_enumeration():
     """1,7 aromatic heteroatom H shift"""
-    eq_(enumerate_tautomers_smiles('c1ccc2[nH]c(-c3nc4ccccc4[nH]3)nc2c1'), {'c1ccc2c(c1)=NC(C1=NC3C=CC=CC3=N1)N=2', 'c1ccc2[nH]c(-c3nc4ccccc4[nH]3)nc2c1', 'c1ccc2[nH]c(C3=NC4C=CC=CC4=N3)nc2c1', 'c1ccc2[nH]c(C3N=c4ccccc4=N3)nc2c1', 'c1ccc2c(c1)=NC(=C1N=C3C=CC=CC3N1)N=2', 'c1ccc2c(c1)NC(=C1N=c3ccccc3=N1)N2'})
+    eq_(enumerate_tautomers_smiles('c1ccc2[nH]c(-c3nc4ccccc4[nH]3)nc2c1'), {'C1=CC2=NC(C3N=c4ccccc4=N3)=NC2C=C1', 'C1=CC2=NC(c3nc4ccccc4[nH]3)=NC2C=C1', 'c1ccc2[nH]c(-c3nc4ccccc4[nH]3)nc2c1', 'C1=CC2=NC(=C3N=c4ccccc4=N3)NC2C=C1', 'c1ccc2c(c1)=NC(c1nc3ccccc3[nH]1)N=2', 'c1ccc2c(c1)NC(=C1N=c3ccccc3=N1)N2'})
 
 
 def test_1_7_aromatic_heteroatom_enumeration2():
     """1,7 aromatic heteroatom H shift"""
-    eq_(enumerate_tautomers_smiles('c1ccc2c(c1)NC(=C1N=c3ccccc3=N1)N2'), {'c1ccc2c(c1)=NC(C1=NC3C=CC=CC3=N1)N=2', 'c1ccc2[nH]c(-c3nc4ccccc4[nH]3)nc2c1', 'c1ccc2[nH]c(C3=NC4C=CC=CC4=N3)nc2c1', 'c1ccc2[nH]c(C3N=c4ccccc4=N3)nc2c1', 'c1ccc2c(c1)=NC(=C1N=C3C=CC=CC3N1)N=2', 'c1ccc2c(c1)NC(=C1N=c3ccccc3=N1)N2'})
+    eq_(enumerate_tautomers_smiles('c1ccc2c(c1)NC(=C1N=c3ccccc3=N1)N2'), {'C1=CC2=NC(C3N=c4ccccc4=N3)=NC2C=C1', 'C1=CC2=NC(c3nc4ccccc4[nH]3)=NC2C=C1', 'c1ccc2[nH]c(-c3nc4ccccc4[nH]3)nc2c1', 'C1=CC2=NC(=C3N=c4ccccc4=N3)NC2C=C1', 'c1ccc2c(c1)=NC(c1nc3ccccc3[nH]1)N=2', 'c1ccc2c(c1)NC(=C1N=c3ccccc3=N1)N2'})
 
 
 def test_1_9_aromatic_heteroatom_enumeration():
     """1,9 aromatic heteroatom H shift"""
-    eq_(enumerate_tautomers_smiles('CNc1ccnc2ncnn21'), {'CN=c1cc[nH]c2ncnn21', 'CN=c1ccnc2[nH]cnn21', 'CN=c1ccnc2nc[nH]n21', 'CNc1ccnc2ncnn21'})
+    eq_(enumerate_tautomers_smiles('CNc1ccnc2ncnn21'), {'CN=c1cc[nH]c2ncnn12', 'CN=c1ccnc2nc[nH]n12', 'CN=c1ccnc2[nH]cnn12', 'CNc1ccnc2ncnn12'})
 
 
 def test_1_9_aromatic_heteroatom_enumeration2():
     """1,9 aromatic heteroatom H shift"""
-    eq_(enumerate_tautomers_smiles('CN=c1ccnc2nc[nH]n21'), {'CN=c1cc[nH]c2ncnn21', 'CN=c1ccnc2[nH]cnn21', 'CN=c1ccnc2nc[nH]n21', 'CNc1ccnc2ncnn21'})
+    eq_(enumerate_tautomers_smiles('CN=c1ccnc2nc[nH]n21'), {'CN=c1ccnc2nc[nH]n12', 'CN=c1cc[nH]c2ncnn12', 'CN=c1ccnc2[nH]cnn12', 'CNc1ccnc2ncnn12'})
 
 
 def test_1_11_aromatic_heteroatom_enumeration():
@@ -230,7 +228,7 @@ def test_1_11_aromatic_heteroatom_enumeration2():
 
 def test_heterocyclic_enumeration():
     """heterocyclic tautomer"""
-    eq_(enumerate_tautomers_smiles('n1ccc2ccc[nH]c12'), {'c1cc2cccnc2[nH]1', 'c1cc2ccc[nH]c-2n1'})
+    eq_(enumerate_tautomers_smiles('n1ccc2ccc[nH]c12'), {'c1c[nH]c2nccc-2c1', 'c1cnc2[nH]ccc2c1'})
 
 
 def test_heterocyclic_enumeration2():
@@ -240,17 +238,17 @@ def test_heterocyclic_enumeration2():
 
 def test_heterocyclic_enumeration3():
     """heterocyclic tautomer"""
-    eq_(enumerate_tautomers_smiles('c1cnc2c[nH]ccc12'), {'c1cc2cc[nH]cc-2n1', 'c1cc2ccncc2[nH]1'})
+    eq_(enumerate_tautomers_smiles('c1cnc2c[nH]ccc12'), {'c1cc2cc[nH]c2cn1', 'c1cc2cc[nH]cc-2n1'})
 
 
 def test_heterocyclic_enumeration4():
     """heterocyclic tautomer"""
-    eq_(enumerate_tautomers_smiles('n1ccc2c[nH]ccc12'), {'c1cc2cnccc2[nH]1', 'c1cc2c[nH]ccc-2n1'})
+    eq_(enumerate_tautomers_smiles('n1ccc2c[nH]ccc12'), {'c1cc2[nH]ccc2cn1', 'c1cc2c[nH]ccc-2n1'})
 
 
 def test_heterocyclic_enumeration5():
     """heterocyclic tautomer"""
-    eq_(enumerate_tautomers_smiles('c1cnc2ccc[nH]c12'), {'c1cc2[nH]cccc-2n1', 'c1cc2ncccc2[nH]1'})
+    eq_(enumerate_tautomers_smiles('c1cnc2ccc[nH]c12'), {'c1c[nH]c2ccnc-2c1', 'c1cnc2cc[nH]c2c1'})
 
 
 def test_furanone_enumeration():
@@ -315,12 +313,12 @@ def test_cyano_iso_cyanic_acid_enumeration2():
 
 def test_formamidinesulfinic_acid_enumeration():
     """formamidinesulfinic acid tautomer"""
-    eq_(enumerate_tautomers_smiles('[S](=O)(=O)C(N)N'), {'N=C(N)S(=O)O', 'NC(N)S(=O)=O'})
+    eq_(enumerate_tautomers_smiles('N[C](N)[S](=O)=O'), {'N=C(N)S(=O)O', 'N[C](N)[S](=O)=O'})
 
 
 def test_formamidinesulfinic_acid_enumeration2():
     """formamidinesulfinic acid tautomer"""
-    eq_(enumerate_tautomers_smiles('[S](=O)(O)C(=N)N'), {'N=C(N)S(=O)O', 'NC(N)S(=O)=O'})
+    eq_(enumerate_tautomers_smiles('N=C(N)S(=O)O'), {'N=C(N)S(=O)O', 'N[C](N)[S](=O)=O'})
 
 
 def test_isocyanide_enumeration():
@@ -390,7 +388,7 @@ def test_phenylpropanone_keto_enol_canonicalization():
 
 def test_1_5_keto_enol_canonicalization():
     """1,5 keto/enol tautomer"""
-    eq_(canonicalize_tautomer_smiles('Oc1nccc2cc[nH]c(=N)c12'), 'N=c1[nH]ccc2cc[nH]c(=O)c21')
+    eq_(canonicalize_tautomer_smiles('Oc1nccc2cc[nH]c(=N)c12'), 'N=c1[nH]ccc2cc[nH]c(=O)c12')
 
 
 def test_1_5_keto_enol_canonicalization2():
@@ -495,7 +493,7 @@ def test_1_5_aromatic_heteroatom_canonicalization5():
 
 def test_1_5_aromatic_heteroatom_canonicalization6():
     """1,5 aromatic heteroatom H shift"""
-    eq_(canonicalize_tautomer_smiles('Oc1c(cccc3)c3nc2ccncc12'), 'O=c1c2ccccc2[nH]c2ccncc21')
+    eq_(canonicalize_tautomer_smiles('Oc1c(cccc3)c3nc2ccncc12'), 'O=c1c2ccccc2[nH]c2ccncc12')
 
 
 def test_1_3_1_5_aromatic_heteroatom_canonicalization():
@@ -505,12 +503,12 @@ def test_1_3_1_5_aromatic_heteroatom_canonicalization():
 
 def test_1_5_aromatic_heteroatom_canonicalization7():
     """1,5 aromatic heteroatom H shift"""
-    eq_(canonicalize_tautomer_smiles('C2(=C1C(=NC=N1)[NH]C(=N2)N)O'), 'N=c1[nH]c2[nH]cnc2c(=O)[nH]1')
+    eq_(canonicalize_tautomer_smiles('C2(=C1C(=NC=N1)[NH]C(=N2)N)O'), 'N=c1[nH]c(=O)c2[nH]cnc2[nH]1')
 
 
 def test_1_5_aromatic_heteroatom_canonicalization8():
     """1,5 aromatic heteroatom H shift"""
-    eq_(canonicalize_tautomer_smiles('C2(C1=C([NH]C=N1)[NH]C(=N2)N)=O'), 'N=c1[nH]c2[nH]cnc2c(=O)[nH]1')
+    eq_(canonicalize_tautomer_smiles('C2(C1=C([NH]C=N1)[NH]C(=N2)N)=O'), 'N=c1[nH]c(=O)c2[nH]cnc2[nH]1')
 
 
 def test_1_5_aromatic_heteroatom_canonicalization9():
@@ -550,12 +548,12 @@ def test_1_7_aromatic_heteroatom_canonicalization2():
 
 def test_1_9_aromatic_heteroatom_canonicalization():
     """1,9 aromatic heteroatom H shift"""
-    eq_(canonicalize_tautomer_smiles('CNc1ccnc2ncnn21'), 'CN=c1cc[nH]c2ncnn21')
+    eq_(canonicalize_tautomer_smiles('CNc1ccnc2ncnn21'), 'CN=c1cc[nH]c2ncnn12')
 
 
 def test_1_9_aromatic_heteroatom_canonicalization2():
     """1,9 aromatic heteroatom H shift"""
-    eq_(canonicalize_tautomer_smiles('CN=c1ccnc2nc[nH]n21'), 'CN=c1cc[nH]c2ncnn21')
+    eq_(canonicalize_tautomer_smiles('CN=c1ccnc2nc[nH]n21'), 'CN=c1cc[nH]c2ncnn12')
 
 
 def test_1_11_aromatic_heteroatom_canonicalization():
@@ -570,7 +568,7 @@ def test_1_11_aromatic_heteroatom_canonicalization2():
 
 def test_heterocyclic_canonicalization():
     """heterocyclic tautomer"""
-    eq_(canonicalize_tautomer_smiles('n1ccc2ccc[nH]c12'), 'c1cc2cccnc2[nH]1')
+    eq_(canonicalize_tautomer_smiles('n1ccc2ccc[nH]c12'), 'c1cnc2[nH]ccc2c1')
 
 
 def test_heterocyclic_canonicalization2():
@@ -580,17 +578,17 @@ def test_heterocyclic_canonicalization2():
 
 def test_heterocyclic_canonicalization3():
     """heterocyclic tautomer"""
-    eq_(canonicalize_tautomer_smiles('c1cnc2c[nH]ccc12'), 'c1cc2ccncc2[nH]1')
+    eq_(canonicalize_tautomer_smiles('c1cnc2c[nH]ccc12'), 'c1cc2cc[nH]c2cn1')
 
 
 def test_heterocyclic_canonicalization4():
     """heterocyclic tautomer"""
-    eq_(canonicalize_tautomer_smiles('n1ccc2c[nH]ccc12'), 'c1cc2cnccc2[nH]1')
+    eq_(canonicalize_tautomer_smiles('n1ccc2c[nH]ccc12'), 'c1cc2[nH]ccc2cn1')
 
 
 def test_heterocyclic_canonicalization5():
     """heterocyclic tautomer"""
-    eq_(canonicalize_tautomer_smiles('c1cnc2ccc[nH]c12'), 'c1cc2ncccc2[nH]1')
+    eq_(canonicalize_tautomer_smiles('c1cnc2ccc[nH]c12'), 'c1cnc2cc[nH]c2c1')
 
 
 def test_furanone_canonicalization():
@@ -655,12 +653,12 @@ def test_cyano_iso_cyanic_acid_canonicalization2():
 
 def test_formamidinesulfinic_acid_canonicalization():
     """formamidinesulfinic acid tautomer"""
-    eq_(canonicalize_tautomer_smiles('[S](=O)(=O)C(N)N'), 'N=C(N)S(=O)O')
+    eq_(canonicalize_tautomer_smiles('N[C](N)[S](=O)=O'), 'N=C(N)S(=O)O')
 
 
 def test_formamidinesulfinic_acid_canonicalization2():
     """formamidinesulfinic acid tautomer"""
-    eq_(canonicalize_tautomer_smiles('[S](=O)(O)C(=N)N'), 'N=C(N)S(=O)O')
+    eq_(canonicalize_tautomer_smiles('N=C(N)S(=O)O'), 'N=C(N)S(=O)O')
 
 
 def test_isocyanide_canonicalization():

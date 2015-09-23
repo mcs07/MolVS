@@ -23,8 +23,8 @@ def test_aromaticity():
 
 def test_aromaticity2():
     """Both rings should be aromatic."""
-    eq_(standardize_smiles('C[N]1C=NC2=C1C(=O)N(C)C(=O)N2C'), 'Cn1cnc2c1c(=O)n(C)c(=O)n2C')
-    eq_(standardize_smiles('Cn1cnc2c1c(=O)n(C)c(=O)n2C'), 'Cn1cnc2c1c(=O)n(C)c(=O)n2C')
+    eq_(standardize_smiles('C[N]1C=NC2=C1C(=O)N(C)C(=O)N2C'), 'Cn1c(=O)c2c(ncn2C)n(C)c1=O')
+    eq_(standardize_smiles('Cn1cnc2c1c(=O)n(C)c(=O)n2C'), 'Cn1c(=O)c2c(ncn2C)n(C)c1=O')
 
 
 def test_aromaticity3():
@@ -40,32 +40,32 @@ def test_stereochemistry():
 
 def test_disconnect_metal():
     """Break metal-organic covalent bonds."""
-    eq_(standardize_smiles('[Na]OC(=O)c1ccccc1'), '[Na+].O=C([O-])c1ccccc1')
+    eq_(standardize_smiles('[Na]OC(=O)c1ccccc1'), 'O=C([O-])c1ccccc1.[Na+]')
 
 
 def test_disconnect_metal2():
     """Break metal-organic covalent bonds."""
-    eq_(standardize_smiles('c1ccccc1C(=O)O[Ca]OC(=O)c1ccccc1'), '[Ca+2].O=C([O-])c1ccccc1.O=C([O-])c1ccccc1')
+    eq_(standardize_smiles('c1ccccc1C(=O)O[Ca]OC(=O)c1ccccc1'), 'O=C([O-])c1ccccc1.O=C([O-])c1ccccc1.[Ca+2]')
 
 
 def test_disconnect_metal3():
     """Disconnect Pt in metal complex."""
-    eq_(standardize_smiles('[Pt](Cl)(Cl)(O)(O)(NC(C)C)NC(C)C'), '[OH-].[OH-].[Cl-].[Cl-].[Pt+6].CC(C)[NH-].CC(C)[NH-]')
+    eq_(standardize_smiles('[Pt](Cl)(Cl)(O)(O)(NC(C)C)NC(C)C'), 'CC(C)[NH-].CC(C)[NH-].[Cl-].[Cl-].[OH-].[OH-].[Pt+6]')
 
 
 def test_disconnect_metal4():
     """Leave mercury covalently bonded."""
-    eq_(standardize_smiles('CC[Hg]SC1=C(C=CC=C1)C(=O)[O][Na]'), '[Na+].CC[Hg]Sc1ccccc1C(=O)[O-]')
+    eq_(standardize_smiles('CC[Hg]SC1=C(C=CC=C1)C(=O)[O][Na]'), 'CC[Hg]Sc1ccccc1C(=O)[O-].[Na+]')
 
 
 def test_disconnect_metal5():
     """Silver carbonate. Unsure about this one."""
-    eq_(standardize_smiles('[Ag]OC(=O)O[Ag]'), '[Ag+].[Ag+].O=C([O-])[O-]')
+    eq_(standardize_smiles('[Ag]OC(=O)O[Ag]'), 'O=C([O-])[O-].[Ag+].[Ag+]')
 
 
 def test_charge_free_metal():
     """Charge free neutral metal with carboxylic acid."""
-    eq_(standardize_smiles('[Na].O=C(O)c1ccccc1'), '[Na+].O=C([O-])c1ccccc1')
+    eq_(standardize_smiles('[Na].O=C(O)c1ccccc1'), 'O=C([O-])c1ccccc1.[Na+]')
 
 
 def test_nitro_normalization():
@@ -120,7 +120,7 @@ def test_sulfoxide_normalization():
 
 def test_sulfoxide_normalization2():
     """Normalize sulfoxide."""
-    eq_(standardize_smiles('COC1=CC2=C(C=C1)[N]C(=N2)[S](=O)CC3=C(C(=C(C=N3)C)OC)C'), 'COc1ccc2[n]c([S+]([O-])Cc3ncc(C)c(OC)c3C)nc2c1')
+    eq_(standardize_smiles('COC1=CC2=C(C=C1)[N]C(=N2)[S](=O)CC3=C(C(=C(C=N3)C)OC)C'), 'COc1ccc2c(c1)N=C([S+]([O-])Cc1ncc(C)c(OC)c1C)[N]2')
 
 
 def test_sulfoxide_normalization3():
@@ -140,7 +140,7 @@ def test_diazo_normalization():
 
 def test_phosphate_normalization():
     """Normalize phosphate."""
-    eq_(standardize_smiles('C1=NC=C([N]1)CO[P+]([O-])([O-])[O-]'), 'O=P([O-])([O-])OCc1cnc[n]1')
+    eq_(standardize_smiles('C1=NC=C([N]1)CO[P+]([O-])([O-])[O-]'), 'O=P([O-])([O-])OCC1=CN=C[N]1')
 
 
 def test_hydrazine_diazonium_normalization():
@@ -155,8 +155,8 @@ def test_amidinium_normalization():
 
 def test_multi_fragment_normalization():
     """All fragments should stay if one gets transformed by normalization."""
-    eq_(standardize_smiles('[Na]OC(=O)c1ccc(C[S+2]([O-])([O-]))cc1'), '[Na+].O=C([O-])c1ccc(CS(=O)=O)cc1')
-    eq_(standardize_smiles('[Na+].[O-]C(=O)c1ccc(C[S+2]([O-])([O-]))cc1'), '[Na+].O=C([O-])c1ccc(CS(=O)=O)cc1')
+    eq_(standardize_smiles('[Na]OC(=O)c1ccc(C[S+2]([O-])([O-]))cc1'), 'O=C([O-])c1ccc(C[S](=O)=O)cc1.[Na+]')
+    eq_(standardize_smiles('[Na+].[O-]C(=O)c1ccc(C[S+2]([O-])([O-]))cc1'), 'O=C([O-])c1ccc(C[S](=O)=O)cc1.[Na+]')
 
 
 def test_1_3_nonaromatic_charge_recombination():
@@ -246,7 +246,7 @@ def test_charge_to_protonated_atom9():
 
 def test_transform_maintains_ring():
     """Ensure no transforms inadvertently breaks open rings."""
-    eq_(standardize_smiles('[nH]1ccc2cccc[n+]12'), 'c1cc2ccccn2[nH+]1')
+    eq_(standardize_smiles('[nH]1ccc2cccc[n+]12'), 'c1ccn2[nH+]ccc2c1')
 
 
 def test_equal_reionize():
@@ -266,7 +266,7 @@ def test_reionize2():
 
 def test_reionize3():
     """Partially ionized acid where proton should be moved to weaker acid."""
-    eq_(standardize_smiles('C1=C(C=C(C(=C1)O)C(=O)[O-])[S](O)(=O)=O.[Na+]'), '[Na+].O=C(O)c1cc(S(=O)(=O)[O-])ccc1O')
+    eq_(standardize_smiles('C1=C(C=C(C(=C1)O)C(=O)[O-])[S](O)(=O)=O.[Na+]'), 'O=C(O)c1cc(S(=O)(=O)[O-])ccc1O.[Na+]')
 
 
 def test_charge_preservation():
@@ -276,12 +276,12 @@ def test_charge_preservation():
 
 def test_charge_preservation2():
     """"""
-    eq_(standardize_smiles('[Cl-].C[NH+](C)C'), '[Cl-].C[NH+](C)C')
+    eq_(standardize_smiles('[Cl-].C[NH+](C)C'), 'C[NH+](C)C.[Cl-]')
 
 
 def test_disconnect_metal6():
     """"""
-    eq_(standardize_smiles('C1(CCCCC1)[Zn]Br'), '[Zn+2].[Br-].[CH-]1CCCCC1')
+    eq_(standardize_smiles('C1(CCCCC1)[Zn]Br'), '[Br-].[CH-]1CCCCC1.[Zn+2]')
 
 
 if __name__ == '__main__':

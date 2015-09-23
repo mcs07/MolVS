@@ -8,15 +8,18 @@ from __future__ import division
 
 import nose
 from nose.tools import eq_
-from rdkit import Chem
 
-from molvs.validate import validate_smiles, Validator
+from molvs.validate import validate_smiles
 
 
 def test_none():
     """IsNoneValidation should log due to SMILES parse error."""
-    eq_(validate_smiles(''), ['ERROR: [IsNoneValidation] Molecule is None'])
     eq_(validate_smiles('3478q439g98h'), ['ERROR: [IsNoneValidation] Molecule is None'])
+
+
+def test_no_atoms():
+    """An empty SMILES produces a mol with not atoms."""
+    eq_(validate_smiles(''), [u'ERROR: [NoAtomValidation] No atoms are present'])
 
 
 def test_fragment():

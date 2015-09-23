@@ -35,7 +35,7 @@ class TautomerTransform(object):
     BONDMAP = {'-': BondType.SINGLE, '=': BondType.DOUBLE, '#': BondType.TRIPLE, ':': BondType.AROMATIC}
     CHARGEMAP = {'+': 1, '0': 0, '-': -1}
 
-    def __init__(self, name, smarts, bonds=(), charges=()):
+    def __init__(self, name, smarts, bonds=(), charges=(), radicals=()):
         """Initialize a TautomerTransform with a name, SMARTS pattern and optional bonds and charges.
 
         Specify custom bonds as a string of ``-``, ``=``, ``#``, ``:`` for single, double, triple and aromatic bonds
@@ -50,6 +50,7 @@ class TautomerTransform(object):
         self.tautomer_str = smarts
         self.bonds = [self.BONDMAP[b] for b in bonds]
         self.charges = [self.CHARGEMAP[b] for b in charges]
+        self.radicals = [int(b) for b in radicals]
         # TODO: Raise error (ValueError?) if bonds and charges lists are not the correct length
 
     @memoized_property
@@ -57,7 +58,7 @@ class TautomerTransform(object):
         return Chem.MolFromSmarts(self.tautomer_str.encode('utf8'))
 
     def __repr__(self):
-        return 'TautomerTransform({!r}, {!r}, {!r}, {!r})'.format(self.name, self.tautomer_str, self.bonds, self.charges)
+        return 'TautomerTransform({!r}, {!r}, {!r}, {!r}, {!r})'.format(self.name, self.tautomer_str, self.bonds, self.charges, self.radicals)
 
     def __str__(self):
         return self.name
@@ -120,8 +121,8 @@ TAUTOMER_TRANSFORMS = (
     TautomerTransform('oxim/nitroso via phenol r', '[O!H0][c]:[c]:[c]:[c][N]=[OH0]'),
     TautomerTransform('cyano/iso-cyanic acid f', '[O!H0][C]#[N]', bonds='=='),
     TautomerTransform('cyano/iso-cyanic acid r', '[N!H0]=[C]=[O]', bonds='#-'),
-    TautomerTransform('formamidinesulfinic acid f', '[O,N;!H0][C][S,Se,Te]=[O]', bonds='=--'),
-    TautomerTransform('formamidinesulfinic acid r', '[O!H0][S,Se,Te][C]=[O,N]', bonds='=--'),
+    TautomerTransform('formamidinesulfinic acid f', '[O,N;H2][C][S,Se,Te]=[O]', bonds='=--', radicals='0000'),
+    TautomerTransform('formamidinesulfinic acid r', '[O!H0][S,Se,Te][C]=[O,N]', bonds='=--', radicals='0110'),
     TautomerTransform('isocyanide f', '[C-0!H0]#[N+0]', bonds='#', charges='-+'),
     TautomerTransform('isocyanide r', '[N+!H0]#[C-]', bonds='#', charges='-+'),
     TautomerTransform('phosphonic acid f', '[OH][PH0]', bonds='='),
@@ -254,13 +255,19 @@ class TautomerEnumerator(object):
                     for match in tautomers[tsmiles].GetSubstructMatches(transform.tautomer):
                         # Adjust hydrogens
                         product = copy.deepcopy(tautomers[tsmiles])
+                        # for atom in product.GetAtoms():
+                        #     atom.SetNumExplicitHs(atom.GetTotalNumHs())
+                        #     atom.SetNoImplicit(True)
                         first = product.GetAtomWithIdx(match[0])
                         last = product.GetAtomWithIdx(match[-1])
-                        first.SetNumExplicitHs(max(0, first.GetNumExplicitHs() - 1))
+                        # log.debug('%s: H%s -> H%s' % (first.GetSymbol(), first.GetTotalNumHs(), first.GetTotalNumHs() - 1))
+                        # log.debug('%s: H%s -> H%s' % (last.GetSymbol(), last.GetTotalNumHs(), last.GetTotalNumHs() + 1))
+                        first.SetNumExplicitHs(max(0, first.GetTotalNumHs() - 1))
                         last.SetNumExplicitHs(last.GetTotalNumHs() + 1)
                         # Adjust bond orders
                         for bi, pair in enumerate(pairwise(match)):
                             if transform.bonds:
+                                # log.debug('%s-%s: %s -> %s' % (product.GetAtomWithIdx(pair[0]).GetSymbol(), product.GetAtomWithIdx(pair[1]).GetSymbol(), product.GetBondBetweenAtoms(*pair).GetBondType(), transform.bonds[bi]))
                                 product.GetBondBetweenAtoms(*pair).SetBondType(transform.bonds[bi])
                             else:
                                 product.GetBondBetweenAtoms(*pair).SetBondType(BondType.DOUBLE if bi % 2 == 0 else BondType.SINGLE)
@@ -269,6 +276,12 @@ class TautomerEnumerator(object):
                             for ci, idx in enumerate(match):
                                 atom = product.GetAtomWithIdx(idx)
                                 atom.SetFormalCharge(atom.GetFormalCharge() + transform.charges[ci])
+                        # Adjust radicals
+                        if transform.radicals:
+                            for ci, idx in enumerate(match):
+                                atom = product.GetAtomWithIdx(idx)
+                                # log.debug('%s: R%s -> R%s' % (atom.GetSymbol(), atom.GetNumRadicalElectrons(), transform.radicals[ci]))
+                                atom.SetNumRadicalElectrons(transform.radicals[ci])
                         try:
                             Chem.SanitizeMol(product)
                             smiles = Chem.MolToSmiles(product, isomericSmiles=True)
