@@ -13,7 +13,12 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 import functools
-from itertools import izip, tee
+from itertools import tee
+
+try:
+    from itertools import izip
+except ImportError:
+    izip = zip
 
 
 def memoized_property(fget):
