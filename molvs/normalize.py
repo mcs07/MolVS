@@ -16,6 +16,7 @@ import logging
 
 from rdkit import Chem
 from rdkit.Chem import AllChem
+import six
 
 from .utils import memoized_property
 
@@ -130,7 +131,7 @@ class Normalizer(object):
         return outmol
 
     def _normalize_fragment(self, mol):
-        for n in xrange(self.max_restarts):
+        for n in six.moves.range(self.max_restarts):
             # Iterate through Normalization transforms and apply each in order
             for normalization in self.normalizations:
                 product = self._apply_transform(mol, normalization.transform)
@@ -154,7 +155,7 @@ class Normalizer(object):
         after the final application, the first product (sorted alphabetically by SMILES) is chosen.
         """
         mols = [mol]
-        for n in xrange(20):
+        for n in six.moves.range(20):
             products = {}
             for mol in mols:
                 for product in [x[0] for x in rule.RunReactants((mol,))]:

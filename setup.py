@@ -27,6 +27,7 @@ setup(
     keywords='chemistry cheminformatics rdkit',
     zip_safe=False,
     test_suite='nose.collector',
+    install_requires=['six'],
     entry_points={'console_scripts': ['molvs = molvs.cli:main']},
     classifiers=[
         'Environment :: Console',

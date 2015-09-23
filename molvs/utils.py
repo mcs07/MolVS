@@ -15,10 +15,7 @@ from __future__ import division
 import functools
 from itertools import tee
 
-try:
-    from itertools import izip
-except ImportError:
-    izip = zip
+import six
 
 
 def memoized_property(fget):
@@ -37,4 +34,4 @@ def pairwise(iterable):
     """Utility function to iterate in a pairwise fashion."""
     a, b = tee(iterable)
     next(b, None)
-    return izip(a, b)
+    return six.moves.zip(a, b)
