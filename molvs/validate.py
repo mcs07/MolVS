@@ -116,6 +116,6 @@ def validate_smiles(smiles):
     :rtype: list of strings.
     """
     # Skip sanitize as standardize does this anyway
-    mol = Chem.MolFromSmiles(smiles.encode('utf8'))
+    mol = Chem.MolFromSmiles(smiles)
     logs = Validator().validate(mol)
     return logs

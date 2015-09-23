@@ -297,7 +297,7 @@ def standardize_smiles(smiles):
     :rtype: string.
     """
     # Skip sanitize as standardize does this anyway
-    mol = Chem.MolFromSmiles(smiles.encode('utf8'), sanitize=False)
+    mol = Chem.MolFromSmiles(smiles, sanitize=False)
     mol = Standardizer().standardize(mol)
     return Chem.MolToSmiles(mol, isomericSmiles=True)
 
@@ -310,7 +310,7 @@ def enumerate_tautomers_smiles(smiles):
     :rtype: set of strings.
     """
     # Skip sanitize as standardize does this anyway
-    mol = Chem.MolFromSmiles(smiles.encode('utf8'), sanitize=False)
+    mol = Chem.MolFromSmiles(smiles, sanitize=False)
     mol = Standardizer().standardize(mol)
     tautomers = TautomerEnumerator().enumerate(mol)
     return {Chem.MolToSmiles(m, isomericSmiles=True) for m in tautomers}
@@ -328,7 +328,7 @@ def canonicalize_tautomer_smiles(smiles):
     :rtype: string.
     """
     # Skip sanitize as standardize does this anyway
-    mol = Chem.MolFromSmiles(smiles.encode('utf8'), sanitize=False)
+    mol = Chem.MolFromSmiles(smiles, sanitize=False)
     mol = Standardizer().standardize(mol)
     tautomer = TautomerCanonicalizer().canonicalize(mol)
     return Chem.MolToSmiles(tautomer, isomericSmiles=True)

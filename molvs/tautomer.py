@@ -55,7 +55,7 @@ class TautomerTransform(object):
 
     @memoized_property
     def tautomer(self):
-        return Chem.MolFromSmarts(self.tautomer_str.encode('utf8'))
+        return Chem.MolFromSmarts(self.tautomer_str)
 
     def __repr__(self):
         return 'TautomerTransform({!r}, {!r}, {!r}, {!r}, {!r})'.format(self.name, self.tautomer_str, self.bonds, self.charges, self.radicals)
@@ -80,7 +80,7 @@ class TautomerScore(object):
 
     @memoized_property
     def smarts(self):
-        return Chem.MolFromSmarts(self.smarts_str.encode('utf8'))
+        return Chem.MolFromSmarts(self.smarts_str)
 
     def __repr__(self):
         return 'TautomerScore({!r}, {!r}, {!r})'.format(self.name, self.smarts_str, self.score)

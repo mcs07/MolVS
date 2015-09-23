@@ -46,12 +46,12 @@ class AcidBasePair(object):
     @memoized_property
     def acid(self):
         log.debug('Loading AcidBasePair acid: %s', self.name)
-        return Chem.MolFromSmarts(self.acid_str.encode('utf8'))
+        return Chem.MolFromSmarts(self.acid_str)
 
     @memoized_property
     def base(self):
         log.debug('Loading AcidBasePair base: %s', self.name)
-        return Chem.MolFromSmarts(self.base_str.encode('utf8'))
+        return Chem.MolFromSmarts(self.base_str)
 
     def __repr__(self):
         return 'AcidBasePair({!r}, {!r}, {!r})'.format(self.name, self.acid_str, self.base_str)
@@ -171,13 +171,13 @@ class Uncharger(object):
     def __init__(self):
         log.debug('Initializing Uncharger')
         #: Neutralizable positive charge (with hydrogens attached)
-        self._pos_h = Chem.MolFromSmarts('[+!H0!$(*~[-])]'.encode('utf8'))
+        self._pos_h = Chem.MolFromSmarts('[+!H0!$(*~[-])]')
         #: Non-neutralizable positive charge (no hydrogens attached)
-        self._pos_quat = Chem.MolFromSmarts('[+H0!$(*~[-])]'.encode('utf8'))
+        self._pos_quat = Chem.MolFromSmarts('[+H0!$(*~[-])]')
         #: Negative charge, not bonded to a positive charge with no hydrogens
-        self._neg = Chem.MolFromSmarts('[-!$(*~[+H0])]'.encode('utf8'))
+        self._neg = Chem.MolFromSmarts('[-!$(*~[+H0])]')
         #: Negative oxygen bonded to [C,P,S]=O, negative aromatic nitrogen?
-        self._neg_acid = Chem.MolFromSmarts('[$([O-][C,P,S]=O),$([n-]1nnnc1),$(n1[n-]nnc1)]'.encode('utf8'))
+        self._neg_acid = Chem.MolFromSmarts('[$([O-][C,P,S]=O),$([n-]1nnnc1),$(n1[n-]nnc1)]')
 
     def __call__(self, mol):
         """Calling an Uncharger instance like a function is the same as calling its uncharge(mol) method."""

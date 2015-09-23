@@ -39,7 +39,7 @@ class Normalization(object):
     @memoized_property
     def transform(self):
         log.debug('Loading Normalization transform: %s', self.name)
-        return AllChem.ReactionFromSmarts(self.transform_str.encode('utf8'))
+        return AllChem.ReactionFromSmarts(str(self.transform_str.encode('utf8')))
 
     def __repr__(self):
         return 'Normalization({!r}, {!r})'.format(self.name, self.transform_str)

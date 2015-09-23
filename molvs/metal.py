@@ -27,10 +27,10 @@ class MetalDisconnector(object):
         log.debug('Initializing MetalDisconnector')
         # Initialize SMARTS to identify relevant substructures
         # TODO: Use atomic numbers instead of element symbols in SMARTS to allow for isotopes?
-        self._metal_nof = Chem.MolFromSmarts('[Li,Na,K,Rb,Cs,F,Be,Mg,Ca,Sr,Ba,Ra,Sc,Ti,V,Cr,Mn,Fe,Co,Ni,Cu,Zn,Al,Ga,Y,Zr,Nb,Mo,Tc,Ru,Rh,Pd,Ag,Cd,In,Sn,Hf,Ta,W,Re,Os,Ir,Pt,Au,Hg,Tl,Pb,Bi]~[N,O,F]'.encode('utf8'))
-        self._metal_non = Chem.MolFromSmarts('[Al,Sc,Ti,V,Cr,Mn,Fe,Co,Ni,Cu,Zn,Y,Zr,Nb,Mo,Tc,Ru,Rh,Pd,Ag,Cd,Hf,Ta,W,Re,Os,Ir,Pt,Au]~[B,C,Si,P,As,Sb,S,Se,Te,Cl,Br,I,At]'.encode('utf8'))
-        self._free_metal = Chem.MolFromSmarts('[Li,Na,K,Mg,CaX0+0]'.encode('utf8'))
-        self._carboxylic = Chem.MolFromSmarts('[CX3](=O)[OX2H1]'.encode('utf8'))
+        self._metal_nof = Chem.MolFromSmarts('[Li,Na,K,Rb,Cs,F,Be,Mg,Ca,Sr,Ba,Ra,Sc,Ti,V,Cr,Mn,Fe,Co,Ni,Cu,Zn,Al,Ga,Y,Zr,Nb,Mo,Tc,Ru,Rh,Pd,Ag,Cd,In,Sn,Hf,Ta,W,Re,Os,Ir,Pt,Au,Hg,Tl,Pb,Bi]~[N,O,F]')
+        self._metal_non = Chem.MolFromSmarts('[Al,Sc,Ti,V,Cr,Mn,Fe,Co,Ni,Cu,Zn,Y,Zr,Nb,Mo,Tc,Ru,Rh,Pd,Ag,Cd,Hf,Ta,W,Re,Os,Ir,Pt,Au]~[B,C,Si,P,As,Sb,S,Se,Te,Cl,Br,I,At]')
+        self._free_metal = Chem.MolFromSmarts('[Li,Na,K,Mg,CaX0+0]')
+        self._carboxylic = Chem.MolFromSmarts('[CX3](=O)[OX2H1]')
 
     def __call__(self, mol):
         """Calling a MetalDisconnector instance like a function is the same as calling its disconnect(mol) method."""
