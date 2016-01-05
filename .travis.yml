@@ -2,6 +2,7 @@ language: python
 python:
   - "2.7"
   - "3.4"
+  - "3.5"
 sudo: false
 before_install:
   - wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
@@ -11,7 +12,7 @@ before_install:
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
   - conda info -a
-  - conda create -q -n tenv python=$TRAVIS_PYTHON_VERSION pip cmake nose
+  - conda create -q -n tenv python=$TRAVIS_PYTHON_VERSION pip cmake pytest
   - source activate tenv
 addons:
   apt:
