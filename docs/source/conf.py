@@ -45,7 +45,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'MolVS'
-copyright = u'2014, Matt Swain'
+copyright = u'2016, Matt Swain'
 
 # The version info for the project you're documenting, acts as replacement for |version| and |release|, also used in
 # various other places throughout the built documents.

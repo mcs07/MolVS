@@ -5,7 +5,7 @@ molvs.cli
 
 This module contains a command line interface for standardization.
 
-:copyright: Copyright 2014 by Matt Swain.
+:copyright: Copyright 2016 by Matt Swain.
 :license: MIT, see LICENSE file for more details.
 """
 
