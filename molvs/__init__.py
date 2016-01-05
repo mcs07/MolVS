@@ -20,7 +20,7 @@ from .errors import MolVSError, StandardizeError, ValidateError
 
 
 __title__ = 'MolVS'
-__version__ = '0.0.3'
+__version__ = '0.0.4'
 __author__ = 'Matt Swain'
 __email__ = 'm.swain@me.com'
 __license__ = 'MIT'
