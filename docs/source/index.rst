@@ -63,4 +63,19 @@ from the MolVS source code and comments.
 
    api
 
+
+Useful links
+------------
+
+- `MolVS on GitHub`_
+- `MolVS on PyPI`_
+- `Issue tracker`_
+- `Release history`_
+- `MolVS Travis CI`_
+
 .. _`RDKit chemistry framework`: http://www.rdkit.org
+.. _`MolVS on GitHub`: https://github.com/mcs07/MolVS
+.. _`MolVS on PyPI`: https://pypi.python.org/pypi/MolVS
+.. _`Issue tracker`: https://github.com/mcs07/MolVS/issues
+.. _`Release history`: https://github.com/mcs07/MolVS/releases
+.. _`MolVS Travis CI`: https://travis-ci.org/mcs07/MolVS
