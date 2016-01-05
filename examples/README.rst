@@ -1,7 +1,7 @@
 Examples
 ========
 
-This directory contains iPython notebooks with examples of how to use MolVS.
+This directory contains Jupyter iPython notebooks with examples of how to use MolVS.
 
 Viewing
 -------
@@ -14,13 +14,13 @@ Interacting
 -----------
 
 You can run the notebooks in an interactive and editable form by downloading the ``.ipynb`` files. You will need to have
-iPython installed::
+Jupyter installed::
 
-    pip install ipython
+    pip install jupyter
 
 To start the notebook server, run::
 
-    ipython notebook
+    jupyter notebook
 
 Then import the downloaded ``.ipynb`` files.
 
