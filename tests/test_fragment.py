@@ -148,7 +148,3 @@ def test_fragment_removal11():
 def test_fragment_removal12():
     """Various fragments should be removed should be removed."""
     assert fragment_removal_smiles('CC(NC1=CC=C(O)C=C1)=O.CCCCC.O.CCO.CCCO.C1CCCCC1.C1CCCCCC1') == 'CC(=O)Nc1ccc(O)cc1'
-
-
-if __name__ == '__main__':
-    nose.main()

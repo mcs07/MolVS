@@ -40,7 +40,3 @@ def test_isotope():
     assert validate_smiles('[13CH4]') == ['INFO: [IsotopeValidation] Molecule contains isotope 13C']
     assert validate_smiles('[2H]C(Cl)(Cl)Cl') == ['INFO: [IsotopeValidation] Molecule contains isotope 2H']
     assert validate_smiles('[2H]OC([2H])([2H])[2H]') == ['INFO: [IsotopeValidation] Molecule contains isotope 2H']
-
-
-if __name__ == '__main__':
-    nose.main()

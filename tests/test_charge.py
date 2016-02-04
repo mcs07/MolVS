@@ -68,7 +68,6 @@ def test_charge_parent9():
     assert charge_parent_smiles('[N+](=O)([O-])[O-]') == 'O=[N+]([O-])[O-]'
 
 
-
 def test_charge_parent10():
     """No organic fragments."""
     assert charge_parent_smiles('[N+](=O)([O-])[O-]', prefer_organic=True) == 'O=[N+]([O-])[O-]'
@@ -82,7 +81,3 @@ def test_charge_parent11():
 def test_charge_parent12():
     """Smaller organic fragment should be chosen over larger inorganic fragment."""
     assert charge_parent_smiles('[N+](=O)([O-])[O-].[CH2]', prefer_organic=True) == '[CH2]'
-
-
-if __name__ == '__main__':
-    nose.main()

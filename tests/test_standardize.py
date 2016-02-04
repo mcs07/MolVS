@@ -279,7 +279,3 @@ def test_charge_preservation2():
 def test_disconnect_metal6():
     """"""
     assert standardize_smiles('C1(CCCCC1)[Zn]Br') == '[Br-].[CH-]1CCCCC1.[Zn+2]'
-
-
-if __name__ == '__main__':
-    nose.main()
