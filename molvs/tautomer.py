@@ -38,6 +38,9 @@ class TautomerTransform(object):
     def __init__(self, name, smarts, bonds=(), charges=(), radicals=()):
         """Initialize a TautomerTransform with a name, SMARTS pattern and optional bonds and charges.
 
+        The SMARTS pattern match is applied to a Kekule form of the molecule, so use explicit single and double bonds
+        rather than aromatic.
+
         Specify custom bonds as a string of ``-``, ``=``, ``#``, ``:`` for single, double, triple and aromatic bonds
         respectively. Specify custom charges as ``+``, ``0``, ``-`` for +1, 0 and -1 charges respectively.
 
@@ -50,7 +53,6 @@ class TautomerTransform(object):
         self.tautomer_str = smarts
         self.bonds = [self.BONDMAP[b] for b in bonds]
         self.charges = [self.CHARGEMAP[b] for b in charges]
-        self.radicals = [int(b) for b in radicals]
         # TODO: Raise error (ValueError?) if bonds and charges lists are not the correct length
 
     @memoized_property
@@ -58,7 +60,7 @@ class TautomerTransform(object):
         return Chem.MolFromSmarts(self.tautomer_str)
 
     def __repr__(self):
-        return 'TautomerTransform({!r}, {!r}, {!r}, {!r}, {!r})'.format(self.name, self.tautomer_str, self.bonds, self.charges, self.radicals)
+        return 'TautomerTransform({!r}, {!r}, {!r}, {!r}, {!r})'.format(self.name, self.tautomer_str, self.bonds, self.charges)
 
     def __str__(self):
         return self.name
@@ -91,41 +93,41 @@ class TautomerScore(object):
 
 #: The default list of TautomerTransforms.
 TAUTOMER_TRANSFORMS = (
-    TautomerTransform('1,3 (thio)keto/enol f', '[CX4!H0][C]=[O,S,Se,Te;X1]'),
-    TautomerTransform('1,3 (thio)keto/enol r', '[O,S,Se,Te;X2!H0][C]=[C]'),
-    TautomerTransform('1,5 (thio)keto/enol f', '[CX4,NX3;!H0][C]=[C][CH0]=[O,S,Se,Te;X1]'),
-    TautomerTransform('1,5 (thio)keto/enol r', '[O,S,Se,Te;X2!H0][CH0]=,:[C][C]=,:[C,N]'),
-    TautomerTransform('aliphatic imine f', '[CX4!H0][C]=[NX2]'),
-    TautomerTransform('aliphatic imine r', '[NX3!H0][C]=[CX3]'),
-    TautomerTransform('special imine f', '[N!H0][C]=[CX3R0]'),
-    TautomerTransform('special imine r', '[CX4!H0][c]=,:[n]'),
-    TautomerTransform('1,3 aromatic heteroatom H shift f', '[#7!H0][#6R1]=[O,#7X2]'),
-    TautomerTransform('1,3 aromatic heteroatom H shift r', '[O,#7;!H0][#6R1]=,:[#7X2]'),
-    TautomerTransform('1,3 heteroatom H shift', '[#7,S,O,Se,Te;!H0][#7X2,#6,#15]=[#7,#16,#8,Se,Te]'),
-    TautomerTransform('1,5 aromatic heteroatom H shift', '[n,s,o;!H0]:[c,n]:[c]:[c,n]:[n,s,o;H0]'),
-    TautomerTransform('1,5 aromatic heteroatom H shift f', '[#7,#16,#8,Se,Te;!H0][#6,nX2]=,:[#6,nX2][#6,#7X2]=,:[#7X2,S,O,Se,Te]'),
-    TautomerTransform('1,5 aromatic heteroatom H shift r', '[#7,S,O,Se,Te;!H0][#6,#7X2]=,:[#6,nX2][#6,nX2]=,:[#7,#16,#8,Se,Te]'),
-    TautomerTransform('1,7 aromatic heteroatom H shift f', '[#7,#8,#16,Se,Te;!H0][#6,#7X2]=,:[#6,#7X2][#6,#7X2]=,:[#6][#6,#7X2]=,:[#7X2,S,O,Se,Te,CX3]'),
-    TautomerTransform('1,7 aromatic heteroatom H shift r', '[#7,S,O,Se,Te,CX4;!H0][#6,#7X2]=,:[#6][#6,#7X2]=,:[#6,#7X2][#6,#7X2]=,:[NX2,S,O,Se,Te]'),
-    TautomerTransform('1,9 aromatic heteroatom H shift f', '[#7,O;!H0][#6,#7X2]=,:[#6,#7X2][#6,#7X2]=,:[#6,#7X2][#6,#7X2]=,:[#6,#7X2][#6,#7X2]=,:[#7,O]'),
-    TautomerTransform('1,11 aromatic heteroatom H shift f', '[#7,O;!H0][#6,nX2]=,:[#6,nX2][#6,nX2]=,:[#6,nX2][#6,nX2]=,:[#6,nX2][#6,nX2]=,:[#6,nX2][#6,nX2]=,:[#7X2,O]'),
-    TautomerTransform('furanone f', '[O,S,N;!H0][#6X3r5;$([#6][!#6])]=,:[#6X3r5]'),
-    TautomerTransform('furanone r', '[#6r5!H0][#6X3r5;$([#6][!#6])]=[O,S,N]'),
+    TautomerTransform('1,3 (thio)keto/enol f', '[CX4!H0]-[C]=[O,S,Se,Te;X1]'),
+    TautomerTransform('1,3 (thio)keto/enol r', '[O,S,Se,Te;X2!H0]-[C]=[C]'),
+    TautomerTransform('1,5 (thio)keto/enol f', '[CX4,NX3;!H0]-[C]=[C][CH0]=[O,S,Se,Te;X1]'),
+    TautomerTransform('1,5 (thio)keto/enol r', '[O,S,Se,Te;X2!H0]-[CH0]=[C]-[C]=[C,N]'),
+    TautomerTransform('aliphatic imine f', '[CX4!H0]-[C]=[NX2]'),
+    TautomerTransform('aliphatic imine r', '[NX3!H0]-[C]=[CX3]'),
+    TautomerTransform('special imine f', '[N!H0]-[C]=[CX3R0]'),
+    TautomerTransform('special imine r', '[CX4!H0]-[c]=[n]'),
+    TautomerTransform('1,3 aromatic heteroatom H shift f', '[#7!H0]-[#6R1]=[O,#7X2]'),
+    TautomerTransform('1,3 aromatic heteroatom H shift r', '[O,#7;!H0]-[#6R1]=[#7X2]'),
+    TautomerTransform('1,3 heteroatom H shift', '[#7,S,O,Se,Te;!H0]-[#7X2,#6,#15]=[#7,#16,#8,Se,Te]'),
+    TautomerTransform('1,5 aromatic heteroatom H shift', '[#7,#16,#8;!H0]-[#6,#7]=[#6]-[#6,#7]=[#7,#16,#8;H0]'),
+    TautomerTransform('1,5 aromatic heteroatom H shift f', '[#7,#16,#8,Se,Te;!H0]-[#6,nX2]=[#6,nX2]-[#6,#7X2]=[#7X2,S,O,Se,Te]'),
+    TautomerTransform('1,5 aromatic heteroatom H shift r', '[#7,S,O,Se,Te;!H0]-[#6,#7X2]=[#6,nX2]-[#6,nX2]=[#7,#16,#8,Se,Te]'),
+    TautomerTransform('1,7 aromatic heteroatom H shift f', '[#7,#8,#16,Se,Te;!H0]-[#6,#7X2]=[#6,#7X2]-[#6,#7X2]=[#6]-[#6,#7X2]=[#7X2,S,O,Se,Te,CX3]'),
+    TautomerTransform('1,7 aromatic heteroatom H shift r', '[#7,S,O,Se,Te,CX4;!H0]-[#6,#7X2]=[#6]-[#6,#7X2]=[#6,#7X2]-[#6,#7X2]=[NX2,S,O,Se,Te]'),
+    TautomerTransform('1,9 aromatic heteroatom H shift f', '[#7,O;!H0]-[#6,#7X2]=[#6,#7X2]-[#6,#7X2]=[#6,#7X2]-[#6,#7X2]=[#6,#7X2]-[#6,#7X2]=[#7,O]'),
+    TautomerTransform('1,11 aromatic heteroatom H shift f', '[#7,O;!H0]-[#6,nX2]=[#6,nX2]-[#6,nX2]=[#6,nX2]-[#6,nX2]=[#6,nX2]-[#6,nX2]=[#6,nX2]-[#6,nX2]=[#7X2,O]'),
+    TautomerTransform('furanone f', '[O,S,N;!H0]-[#6r5]=[#6X3r5;$([#6]([#6r5])=[#6r5])]'),
+    TautomerTransform('furanone r', '[#6r5!H0;$([#6]([#6r5])[#6r5])]-[#6r5]=[O,S,N]'),
     TautomerTransform('keten/ynol f', '[C!H0]=[C]=[O,S,Se,Te;X1]', bonds='#-'),
-    TautomerTransform('keten/ynol r', '[O,S,Se,Te;!H0X2][C]#[C]', bonds='=='),
-    TautomerTransform('ionic nitro/aci-nitro f', '[C!H0][N+;$([N][O-])]=[O]'),
-    TautomerTransform('ionic nitro/aci-nitro r', '[O!H0][N+;$([N][O-])]=[C]'),
-    TautomerTransform('oxim/nitroso f', '[O!H0][N]=[C]'),
-    TautomerTransform('oxim/nitroso r', '[C!H0][N]=[O]'),
-    TautomerTransform('oxim/nitroso via phenol f', '[O!H0][N]=[C][C]=[C][C]=[OH0]'),
-    TautomerTransform('oxim/nitroso via phenol r', '[O!H0][c]:[c]:[c]:[c][N]=[OH0]'),
-    TautomerTransform('cyano/iso-cyanic acid f', '[O!H0][C]#[N]', bonds='=='),
+    TautomerTransform('keten/ynol r', '[O,S,Se,Te;!H0X2]-[C]#[C]', bonds='=='),
+    TautomerTransform('ionic nitro/aci-nitro f', '[C!H0]-[N+;$([N][O-])]=[O]'),
+    TautomerTransform('ionic nitro/aci-nitro r', '[O!H0]-[N+;$([N][O-])]=[C]'),
+    TautomerTransform('oxim/nitroso f', '[O!H0]-[N]=[C]'),
+    TautomerTransform('oxim/nitroso r', '[C!H0]-[N]=[O]'),
+    TautomerTransform('oxim/nitroso via phenol f', '[O!H0]-[N]=[C]-[C]=[C]-[C]=[OH0]'),
+    TautomerTransform('oxim/nitroso via phenol r', '[O!H0]-[c]=[c]-[c]=[c]-[N]=[OH0]'),
+    TautomerTransform('cyano/iso-cyanic acid f', '[O!H0]-[C]#[N]', bonds='=='),
     TautomerTransform('cyano/iso-cyanic acid r', '[N!H0]=[C]=[O]', bonds='#-'),
-    TautomerTransform('formamidinesulfinic acid f', '[O,N;H2][C][S,Se,Te]=[O]', bonds='=--', radicals='0000'),
-    TautomerTransform('formamidinesulfinic acid r', '[O!H0][S,Se,Te][C]=[O,N]', bonds='=--', radicals='0110'),
+    # TautomerTransform('formamidinesulfinic acid f', '[O,N;!H0]-[C]=[S,Se,Te]=[O]', bonds='=--'),  # TODO: WAT!?
+    # TautomerTransform('formamidinesulfinic acid r', '[O!H0]-[S,Se,Te]-[C]=[O,N]', bonds='=--'),
     TautomerTransform('isocyanide f', '[C-0!H0]#[N+0]', bonds='#', charges='-+'),
     TautomerTransform('isocyanide r', '[N+!H0]#[C-]', bonds='#', charges='-+'),
-    TautomerTransform('phosphonic acid f', '[OH][PH0]', bonds='='),
+    TautomerTransform('phosphonic acid f', '[OH]-[PH0]', bonds='='),
     TautomerTransform('phosphonic acid r', '[PH]=[O]', bonds='-'),
 )
 
@@ -245,54 +247,64 @@ class TautomerEnumerator(object):
         :return: A list of all possible tautomers of the molecule.
         :rtype: list of :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
         """
-        tautomers = {Chem.MolToSmiles(mol, isomericSmiles=True): copy.deepcopy(mol)}
+        smiles = Chem.MolToSmiles(mol, isomericSmiles=True)
+        tautomers = {smiles: copy.deepcopy(mol)}
+        # Create a kekulized form of the molecule to match the SMARTS against
+        kekulized = copy.deepcopy(mol)
+        Chem.Kekulize(kekulized)
+        kekulized = {smiles: kekulized}
         done = set()
         while len(tautomers) < self.max_tautomers:
             for tsmiles in sorted(tautomers):
                 if tsmiles in done:
                     continue
                 for transform in self.transforms:
-                    for match in tautomers[tsmiles].GetSubstructMatches(transform.tautomer):
-                        # Adjust hydrogens
-                        product = copy.deepcopy(tautomers[tsmiles])
-                        # for atom in product.GetAtoms():
-                        #     atom.SetNumExplicitHs(atom.GetTotalNumHs())
-                        #     atom.SetNoImplicit(True)
+                    for match in kekulized[tsmiles].GetSubstructMatches(transform.tautomer):
+                        # log.debug('Matched rule: %s to %s for %s', transform.name, tsmiles, match)
+                        # Create a copy of in the input molecule so we can modify it
+                        # Use kekule form so bonds are explicitly single/double instead of aromatic
+                        product = copy.deepcopy(kekulized[tsmiles])
+                        # Remove a hydrogen from the first matched atom and add one to the last
                         first = product.GetAtomWithIdx(match[0])
                         last = product.GetAtomWithIdx(match[-1])
                         # log.debug('%s: H%s -> H%s' % (first.GetSymbol(), first.GetTotalNumHs(), first.GetTotalNumHs() - 1))
                         # log.debug('%s: H%s -> H%s' % (last.GetSymbol(), last.GetTotalNumHs(), last.GetTotalNumHs() + 1))
                         first.SetNumExplicitHs(max(0, first.GetTotalNumHs() - 1))
                         last.SetNumExplicitHs(last.GetTotalNumHs() + 1)
+                        # Remove any implicit hydrogens from the first and last atoms now we have set the count explicitly
+                        first.SetNoImplicit(True)
+                        last.SetNoImplicit(True)
                         # Adjust bond orders
                         for bi, pair in enumerate(pairwise(match)):
                             if transform.bonds:
+                                # Set the resulting bond types as manually specified in the transform
                                 # log.debug('%s-%s: %s -> %s' % (product.GetAtomWithIdx(pair[0]).GetSymbol(), product.GetAtomWithIdx(pair[1]).GetSymbol(), product.GetBondBetweenAtoms(*pair).GetBondType(), transform.bonds[bi]))
                                 product.GetBondBetweenAtoms(*pair).SetBondType(transform.bonds[bi])
                             else:
-                                product.GetBondBetweenAtoms(*pair).SetBondType(BondType.DOUBLE if bi % 2 == 0 else BondType.SINGLE)
+                                # If no manually specified bond types, just swap single and double bonds
+                                current_bond_type = product.GetBondBetweenAtoms(*pair).GetBondType()
+                                product.GetBondBetweenAtoms(*pair).SetBondType(BondType.DOUBLE if current_bond_type == BondType.SINGLE else BondType.SINGLE)
+                                # log.debug('%s-%s: %s -> %s' % (product.GetAtomWithIdx(pair[0]).GetSymbol(), product.GetAtomWithIdx(pair[1]).GetSymbol(), current_bond_type, product.GetBondBetweenAtoms(*pair).GetBondType()))
                         # Adjust charges
                         if transform.charges:
                             for ci, idx in enumerate(match):
                                 atom = product.GetAtomWithIdx(idx)
+                                # log.debug('%s: C%s -> C%s' % (atom.GetSymbol(), atom.GetFormalCharge(), atom.GetFormalCharge() + transform.charges[ci]))
                                 atom.SetFormalCharge(atom.GetFormalCharge() + transform.charges[ci])
-                        # Adjust radicals
-                        if transform.radicals:
-                            for ci, idx in enumerate(match):
-                                atom = product.GetAtomWithIdx(idx)
-                                # log.debug('%s: R%s -> R%s' % (atom.GetSymbol(), atom.GetNumRadicalElectrons(), transform.radicals[ci]))
-                                atom.SetNumRadicalElectrons(transform.radicals[ci])
                         try:
                             Chem.SanitizeMol(product)
                             smiles = Chem.MolToSmiles(product, isomericSmiles=True)
                             log.debug('Applied rule: %s to %s', transform.name, tsmiles)
                             if smiles not in tautomers:
                                 log.debug('New tautomer produced: %s' % smiles)
+                                kekulized_product = copy.deepcopy(product)
+                                Chem.Kekulize(kekulized_product)
                                 tautomers[smiles] = product
+                                kekulized[smiles] = kekulized_product
                             else:
                                 log.debug('Previous tautomer produced again: %s' % smiles)
                         except ValueError:
-                            log.debug('ValueError')
+                            log.debug('ValueError Applying rule: %s', transform.name)
                 done.add(tsmiles)
             if len(tautomers) == len(done):
                 break
