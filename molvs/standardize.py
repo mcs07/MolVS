@@ -144,7 +144,7 @@ class Standardizer(object):
             mol = self.standardize(mol)
         else:
             mol = copy.deepcopy(mol)
-        mol = Chem.RemoveStereochemistry(mol)
+        Chem.RemoveStereochemistry(mol)
         return mol
 
     def isotope_parent(self, mol, skip_standardize=False):
