@@ -88,8 +88,8 @@ class Standardizer(object):
         :rtype: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
         """
         mol = copy.deepcopy(mol)
-        Chem.RemoveHs(mol)
         Chem.SanitizeMol(mol)
+        mol = Chem.RemoveHs(mol)
         mol = self.disconnect_metals(mol)
         mol = self.normalize(mol)
         mol = self.reionize(mol)
