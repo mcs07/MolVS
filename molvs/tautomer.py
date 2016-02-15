@@ -326,4 +326,4 @@ class TautomerEnumerator(object):
                             Chem.AssignStereochemistry(tautomer, force=True, cleanIt=True)
                             log.debug('Removed stereochemistry from unfixed double bond')
                             break
-        return tautomers.values()
+        return list(tautomers.values())
