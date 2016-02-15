@@ -375,6 +375,11 @@ def test_gaunine_enumeration():
     }
 
 
+def test_many_enumeration():
+    """Test a structure with hundreds of tautomers."""
+    assert len(enumerate_tautomers_smiles('[H][C](CO)(NC(=O)C1=C(O)C(O)=CC=C1)C(O)=O')) == 375
+
+
 def test_1_3_keto_enol_canonicalization():
     """1,3 keto/enol tautomer"""
     assert canonicalize_tautomer_smiles('C1(=CCCCC1)O') == 'O=C1CCCCC1'
