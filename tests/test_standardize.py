@@ -279,3 +279,13 @@ def test_charge_preservation2():
 def test_disconnect_metal6():
     """"""
     assert standardize_smiles('C1(CCCCC1)[Zn]Br') == '[Br-].[CH-]1CCCCC1.[Zn+2]'
+
+
+def test_positive_carbon_nitrogen():
+    """"""
+    assert standardize_smiles('CN[C+](C)NC') == 'CNC(C)=[NH+]C'
+
+
+def test_positive_phosphorus_nitrogen():
+    """"""
+    assert standardize_smiles('CN[P+](C)(C)NC') == 'CNP(C)(C)=[NH+]C'
