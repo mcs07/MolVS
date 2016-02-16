@@ -29,9 +29,20 @@ def test_carbamimidoylbenzoic_acid():
     """Custom ResonanceEnumerate options allow unconstrained charges."""
     mol = Chem.MolFromSmiles('NC(=[NH2+])c1ccc(cc1)C(=O)[O-]')
     rs = ResonanceEnumerator().enumerate(mol)
-    assert {Chem.MolToSmiles(r) for r in rs} == {'NC(=[NH2+])c1ccc(cc1)C(=O)[O-]'}
+    assert {Chem.MolToSmiles(r, isomericSmiles=True) for r in rs} == {'NC(=[NH2+])c1ccc(C(=O)[O-])cc1'}
     rs = ResonanceEnumerator(allow_incomplete_octets=True, unconstrained_anions=True, unconstrained_cations=True).enumerate(mol)
     assert len(rs) == 32
+
+
+def test_mobile_charge():
+    """"""
+    assert enumerate_resonance_smiles('CN1CC[N+]2=C1C1=C(C=CC=C1)C1=CC=CC=C21') == {'CN1CC[n+]2c1c1ccccc1c1ccccc12', 'C[N+]1=C2c3ccccc3-c3ccccc3N2CC1'}
+
+
+def test_mobile_charge2():
+    """"""
+    assert enumerate_resonance_smiles('C[N+]1=C2N(CC1)C1=CC=CC=C1C1=C2C=CC=C1') == {'CN1CC[n+]2c1c1ccccc1c1ccccc12', 'C[N+]1=C2c3ccccc3-c3ccccc3N2CC1'}
+
 
 
 

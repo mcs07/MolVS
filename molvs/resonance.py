@@ -23,6 +23,7 @@ log = logging.getLogger(__name__)
 
 MAX_STRUCTURES = 1000
 
+
 class ResonanceEnumerator(object):
     """Simple wrapper around RDKit ResonanceMolSupplier.
 
@@ -69,8 +70,14 @@ class ResonanceEnumerator(object):
             flags = flags | Chem.UNCONSTRAINED_ANIONS
         if self.unconstrained_cations:
             flags = flags | Chem.UNCONSTRAINED_CATIONS
-        # list wrap?
-        return Chem.ResonanceMolSupplier(mol, flags=flags, maxStructs=self.max_structures)
+        results = []
+        for result in Chem.ResonanceMolSupplier(mol, flags=flags, maxStructs=self.max_structures):
+            # This seems necessary? ResonanceMolSupplier only does a partial sanitization
+            Chem.SanitizeMol(result)
+            results.append(result)
+        return results
+
+        # Potentially interesting: getNumConjGrps(), getBondConjGrpIdx() and getAtomConjGrpIdx()
 
 
 def enumerate_resonance_smiles(smiles):
@@ -80,8 +87,7 @@ def enumerate_resonance_smiles(smiles):
     :returns: A set containing SMILES strings for every possible resonance form.
     :rtype: set of strings.
     """
-    # Skip sanitize as standardize does this anyway
-    mol = Chem.MolFromSmiles(smiles, sanitize=False)
-    Chem.SanitizeMol(mol)
+    mol = Chem.MolFromSmiles(smiles)
+    #Chem.SanitizeMol(mol)  # MolFromSmiles does Sanitize by default
     mesomers = ResonanceEnumerator().enumerate(mol)
     return {Chem.MolToSmiles(m, isomericSmiles=True) for m in mesomers}
