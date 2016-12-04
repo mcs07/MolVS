@@ -36,6 +36,23 @@ def test_standardize4():
     assert standardize_smiles('C[Hg]C') == 'C[Hg]C'
 
 
+def test_standardize5():
+    """Test zirconium (IV) ethoxide."""
+    assert standardize_smiles('CCO[Zr](OCC)(OCC)OCC') == 'CC[O-].CC[O-].CC[O-].CC[O-].[Zr+4]'
+
+
+def test_standardize6():
+    """Test Grignard reagent."""
+    # TODO: Should we disconnect this?
+    assert standardize_smiles('c1ccccc1[Mg]Br') == 'Br[Mg]c1ccccc1'
+
+
+# TODO?
+# def test_standardize5():
+#     """Test table salt."""
+#     assert standardize_smiles('[Na]Cl') == '[Na+].[Cl-]'
+
+
 def test_metaldisconnector1():
     """Test direct usage of MetalDisconnector class."""
     mol = Chem.MolFromSmiles('NC(CC(=O)O)C(=O)[O-].O.O.[Na+]')
@@ -50,7 +67,3 @@ def test_metaldisconnector2():
     md = MetalDisconnector()
     mol = md.disconnect(mol)
     assert Chem.MolToSmiles(mol) == 'CCC(=O)[O-].[Na+]'
-
-
-
-
