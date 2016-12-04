@@ -99,24 +99,65 @@ ACID_BASE_PAIRS = (
 )
 
 
-class Reionizer(object):
-    """A class to reionize a molecule such that the strongest acids ionize first."""
+class ChargeCorrection(object):
+    """An atom that should have a certain charge applied, defined by a SMARTS pattern."""
 
-    def __init__(self, acid_base_pairs=ACID_BASE_PAIRS):
+    def __init__(self, name, smarts, charge):
+        """Initialize a ChargeCorrection with the following parameters:
+
+        :param string name: A name for this ForcedAtomCharge.
+        :param string smarts: SMARTS pattern to match. Charge is applied to the first atom.
+        :param int charge: The charge to apply.
+        """
+        log.debug('Initializing ChargeCorrection: %s', name)
+        self.name = name
+        self.smarts_str = smarts
+        self.charge = charge
+
+    @memoized_property
+    def smarts(self):
+        log.debug('Loading ChargeCorrection smarts: %s', self.name)
+        return Chem.MolFromSmarts(self.smarts_str)
+
+    def __repr__(self):
+        return 'ChargeCorrection({!r}, {!r}, {!r})'.format(self.name, self.smarts_str, self.charge)
+
+    def __str__(self):
+        return self.name
+
+
+#: The default list of ChargeCorrections.
+CHARGE_CORRECTIONS = (
+    ChargeCorrection('[Li,Na,K]', '[Li,Na,K;X0+0]', 1),
+    ChargeCorrection('[Mg,Ca]', '[Mg,Ca;X0+0]', 2),
+    ChargeCorrection('[Cl]', '[Cl;X0+0]', -1),
+    # TODO: Extend to other incorrectly charged atoms
+)
+
+
+class Reionizer(object):
+    """A class to fix charges and reionize a molecule such that the strongest acids ionize first."""
+
+    def __init__(self, acid_base_pairs=ACID_BASE_PAIRS, charge_corrections=CHARGE_CORRECTIONS):
         """Initialize a Reionizer with the following parameter:
 
         :param acid_base_pairs: A list of :class:`AcidBasePairs <molvs.charge.AcidBasePair>` to reionize, sorted from
                                 strongest to weakest.
+        :param charge_corrections: A list of :class:`ChargeCorrections <molvs.charge.ChargeCorrection>`.
         """
         log.debug('Initializing Reionizer')
         self.acid_base_pairs = acid_base_pairs
+        self.charge_corrections = charge_corrections
 
     def __call__(self, mol):
         """Calling a Reionizer instance like a function is the same as calling its reionize(mol) method."""
         return self.reionize(mol)
 
     def reionize(self, mol):
-        """If molecule with multiple acid groups is partially ionized, ensure strongest acids ionize first.
+        """Enforce charges on certain atoms, then perform competitive reionization.
+
+        First, charge corrections are applied to ensure, for example, that free metals are correctly ionized. Then, if
+        a molecule with multiple acid groups is partially ionized, ensure the strongest acids ionize first.
 
         The algorithm works as follows:
 
@@ -129,6 +170,29 @@ class Reionizer(object):
         :rtype: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
         """
         log.debug('Running Reionizer')
+
+        start_charge = Chem.GetFormalCharge(mol)
+
+        # Apply forced charge corrections
+        for cc in self.charge_corrections:
+            for match in mol.GetSubstructMatches(cc.smarts):
+                atom = mol.GetAtomWithIdx(match[0])
+                log.info('Applying charge correction %s (%s %+d)', cc.name, atom.GetSymbol(), cc.charge)
+                atom.SetFormalCharge(cc.charge)
+
+        current_charge = Chem.GetFormalCharge(mol)
+        charge_diff = Chem.GetFormalCharge(mol) - start_charge
+        # If molecule is now neutral, assume everything is now fixed
+        # But otherwise, if charge has become more positive, look for additional protonated acid groups to ionize
+        if not current_charge == 0:
+            while charge_diff > 0:
+                ppos, poccur = self._strongest_protonated(mol)
+                log.info('Ionizing %s to balance previous charge corrections', self.acid_base_pairs[ppos].name)
+                patom = mol.GetAtomWithIdx(poccur[-1])
+                patom.SetFormalCharge(patom.GetFormalCharge() - 1)
+                patom.SetNumExplicitHs(max(0, patom.GetNumExplicitHs() - 1))
+                charge_diff -= 1
+
         while True:
             ppos, poccur = self._strongest_protonated(mol)
             ipos, ioccur = self._weakest_ionized(mol)

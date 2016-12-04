@@ -23,7 +23,7 @@ from .metal import MetalDisconnector
 from .fragment import PREFER_ORGANIC, LargestFragmentChooser, FragmentRemover
 from .normalize import NORMALIZATIONS, MAX_RESTARTS, Normalizer
 from .tautomer import TAUTOMER_TRANSFORMS, TAUTOMER_SCORES, MAX_TAUTOMERS, TautomerCanonicalizer, TautomerEnumerator
-from .charge import ACID_BASE_PAIRS, Reionizer, Uncharger
+from .charge import ACID_BASE_PAIRS, CHARGE_CORRECTIONS, Reionizer, Uncharger
 from .utils import memoized_property
 
 
@@ -44,13 +44,16 @@ class Standardizer(object):
     """
 
     def __init__(self, normalizations=NORMALIZATIONS, acid_base_pairs=ACID_BASE_PAIRS,
-                 tautomer_transforms=TAUTOMER_TRANSFORMS, tautomer_scores=TAUTOMER_SCORES,
-                 max_restarts=MAX_RESTARTS, max_tautomers=MAX_TAUTOMERS, prefer_organic=PREFER_ORGANIC):
+                 charge_corrections=CHARGE_CORRECTIONS, tautomer_transforms=TAUTOMER_TRANSFORMS,
+                 tautomer_scores=TAUTOMER_SCORES, max_restarts=MAX_RESTARTS, max_tautomers=MAX_TAUTOMERS,
+                 prefer_organic=PREFER_ORGANIC):
         """Initialize a Standardizer with optional custom parameters.
 
         :param normalizations: A list of Normalizations to apply (default: :data:`~molvs.normalize.NORMALIZATIONS`).
         :param acid_base_pairs: A list of AcidBasePairs for competitive reionization (default:
                                 :data:`~molvs.charge.ACID_BASE_PAIRS`).
+        :param charge_corrections: A list of ChargeCorrections to apply (default:
+                                :data:`~molvs.charge.CHARGE_CORRECTIONS`).
         :param tautomer_transforms: A list of TautomerTransforms to apply (default:
                                     :data:`~molvs.tautomer.TAUTOMER_TRANSFORMS`).
         :param tautomer_scores: A list of TautomerScores used to determine canonical tautomer (default:
@@ -62,6 +65,7 @@ class Standardizer(object):
         log.debug('Initializing Standardizer')
         self.normalizations = normalizations
         self.acid_base_pairs = acid_base_pairs
+        self.charge_corrections = charge_corrections
         self.tautomer_transforms = tautomer_transforms
         self.tautomer_scores = tautomer_scores
         self.max_restarts = max_restarts
@@ -246,7 +250,7 @@ class Standardizer(object):
         """
         :returns: A callable :class:`~molvs.charge.Reionizer` instance.
         """
-        return Reionizer(acid_base_pairs=self.acid_base_pairs)
+        return Reionizer(acid_base_pairs=self.acid_base_pairs, charge_corrections=self.charge_corrections)
 
     @memoized_property
     def uncharge(self):

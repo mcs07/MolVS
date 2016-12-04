@@ -9,7 +9,7 @@ import logging
 
 from rdkit import Chem
 
-from molvs.standardize import Standardizer
+from molvs.standardize import Standardizer, standardize_smiles
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -81,3 +81,8 @@ def test_charge_parent11():
 def test_charge_parent12():
     """Smaller organic fragment should be chosen over larger inorganic fragment."""
     assert charge_parent_smiles('[N+](=O)([O-])[O-].[CH2]', prefer_organic=True) == '[CH2]'
+
+
+def test_standardize():
+    """Test table salt."""
+    assert standardize_smiles('[Na].[Cl]') == '[Cl-].[Na+]'

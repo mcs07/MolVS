@@ -20,6 +20,9 @@ from rdkit import Chem
 log = logging.getLogger(__name__)
 
 
+# TODO: This won't disconnect e.g. covalent [Na]Cl...
+
+
 class MetalDisconnector(object):
     """Class for breaking covalent bonds between metals and organic atoms under certain conditions."""
 

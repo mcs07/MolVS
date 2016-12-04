@@ -47,12 +47,6 @@ def test_standardize6():
     assert standardize_smiles('c1ccccc1[Mg]Br') == 'Br[Mg]c1ccccc1'
 
 
-# TODO?
-# def test_standardize5():
-#     """Test table salt."""
-#     assert standardize_smiles('[Na]Cl') == '[Na+].[Cl-]'
-
-
 def test_metaldisconnector1():
     """Test direct usage of MetalDisconnector class."""
     mol = Chem.MolFromSmiles('NC(CC(=O)O)C(=O)[O-].O.O.[Na+]')
