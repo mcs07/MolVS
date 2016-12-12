@@ -10,6 +10,7 @@ import logging
 from rdkit import Chem
 
 from molvs.standardize import Standardizer, standardize_smiles
+from molvs.charge import Reionizer
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -86,3 +87,19 @@ def test_charge_parent12():
 def test_standardize():
     """Test table salt."""
     assert standardize_smiles('[Na].[Cl]') == '[Cl-].[Na+]'
+
+
+def test_reionize():
+    """Test reionizer moves proton to weaker acid."""
+    mol = Chem.MolFromSmiles('C1=C(C=CC(=C1)[S]([O-])=O)[S](O)(=O)=O')
+    r = Reionizer()
+    mol = r.reionize(mol)
+    assert Chem.MolToSmiles(mol) == 'O=S(O)c1ccc(S(=O)(=O)[O-])cc1'
+
+
+def test_reionize2():
+    """Test charged carbon doesn't get recognised as alpha-carbon-hydrogen-keto."""
+    mol = Chem.MolFromSmiles('CCOC(=O)C(=O)[CH-]C#N')
+    r = Reionizer()
+    mol = r.reionize(mol)
+    assert Chem.MolToSmiles(mol) == 'CCOC(=O)C(=O)[CH-]C#N'

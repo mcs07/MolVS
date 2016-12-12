@@ -19,6 +19,7 @@ import logging
 
 from rdkit import Chem
 
+from .errors import StandardizeError
 from .utils import memoized_property
 
 
@@ -87,11 +88,11 @@ ACID_BASE_PAIRS = (
     AcidBasePair('-CONH2', 'C(=O)[NH2]', 'C(=O)[NH-]'),
     AcidBasePair('imidazole', 'c1cnc[n]1', 'c1cnc[n-]1'),
     AcidBasePair('-OH', '[CX4][OH]', '[CX4][O-]'),
-    AcidBasePair('alpha-carbon-hydrogen-keto group', 'O=C[CH]', 'O=C[C-]'),
-    AcidBasePair('alpha-carbon-hydrogen-acetyl ester group', 'OC(=O)[CH]', 'OC(=O)[C-]'),
+    AcidBasePair('alpha-carbon-hydrogen-keto group', 'O=C[CH+0]', 'O=C[C-]'),
+    AcidBasePair('alpha-carbon-hydrogen-acetyl ester group', 'OC(=O)[CH+0]', 'OC(=O)[C-]'),
     AcidBasePair('sp carbon hydrogen', 'C#[CH]', 'C#[C-]'),
-    AcidBasePair('alpha-carbon-hydrogen-sulfone group', 'CS(=O)(=O)C[CH]', 'CS(=O)(=O)C[C-]'),
-    AcidBasePair('alpha-carbon-hydrogen-sulfoxide group', 'C[SD3](=O)C[CH]', 'C[SD3](=O)C[C-]'),
+    AcidBasePair('alpha-carbon-hydrogen-sulfone group', 'CS(=O)(=O)C[CH+0]', 'CS(=O)(=O)C[C-]'),
+    AcidBasePair('alpha-carbon-hydrogen-sulfoxide group', 'C[SD3](=O)C[CH+0]', 'C[SD3](=O)C[C-]'),
     AcidBasePair('-NH2', '[CX4][NH2]', '[CX4][NH-]'),
     AcidBasePair('benzyl hydrogen', 'c[CD4H]', 'c[CD3-]'),
     AcidBasePair('sp2-carbon hydrogen', '[CX3]=[CX3H]', '[CX3]=[CX2-]'),
@@ -197,6 +198,8 @@ class Reionizer(object):
             ppos, poccur = self._strongest_protonated(mol)
             ipos, ioccur = self._weakest_ionized(mol)
             if ioccur and poccur and ppos < ipos:
+                if poccur[-1] == ioccur[-1]:
+                    raise StandardizeError('Reionizer entered an infinite loop! Please report as a MolVS bug.')
                 log.info('Moved proton from %s to %s', self.acid_base_pairs[ppos].name, self.acid_base_pairs[ipos].name)
                 patom = mol.GetAtomWithIdx(poccur[-1])
                 patom.SetFormalCharge(patom.GetFormalCharge() - 1)
