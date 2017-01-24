@@ -103,3 +103,35 @@ def test_reionize2():
     r = Reionizer()
     mol = r.reionize(mol)
     assert Chem.MolToSmiles(mol) == 'CCOC(=O)C(=O)[CH-]C#N'
+
+
+def test_reionize3():
+    """"""
+    mol = Chem.MolFromSmiles('C[N+]1=C[CH-]N(C(=N)N)/C1=C/[N+](=O)[O-]')
+    r = Reionizer()
+    mol = r.reionize(mol)
+    assert Chem.MolToSmiles(mol) == 'C[N+]1=CCN(C(=N)N)C1=[C-][N+](=O)[O-]'
+
+
+# def test_reionize3():
+#     """Test canonical ionization position when multiple equivalent possibilities."""
+#     mol = Chem.MolFromSmiles('CC1=CC(=CC=C1S(O)=O)S([O-])=O')
+#     mol2 = Chem.MolFromSmiles('CC1=CC(=CC=C1S([O-])=O)S(O)=O')
+#     r = Reionizer()
+#     mol = r.reionize(mol)
+#     mol2 = r.reionize(mol2)
+#     assert Chem.MolToSmiles(mol) == 'Cc1cc(S(=O)[O-])ccc1S(=O)O'
+#     assert Chem.MolToSmiles(mol2) == 'Cc1cc(S(=O)[O-])ccc1S(=O)O'
+#     assert Chem.MolToSmiles(mol) == Chem.MolToSmiles(mol2)
+#
+#
+# def test_reionize4():
+#     """Test canonical ionization position when multiple equivalent possibilities."""
+#     mol = Chem.MolFromSmiles('CCOC(=O)C(=O)[CH-]C#N')
+#     mol2 = Chem.MolFromSmiles('[CH2-]COC(=O)C(=O)CC#N')
+#     r = Reionizer()
+#     mol = r.reionize(mol)
+#     mol2 = r.reionize(mol2)
+#     assert Chem.MolToSmiles(mol) == '[CH2-]COC(=O)C(=O)CC#N'
+#     assert Chem.MolToSmiles(mol2) == ''
+#     assert Chem.MolToSmiles(mol) == Chem.MolToSmiles(mol2)

@@ -19,7 +19,6 @@ import logging
 
 from rdkit import Chem
 
-from .errors import StandardizeError
 from .utils import memoized_property
 
 
@@ -72,8 +71,8 @@ ACID_BASE_PAIRS = (
     AcidBasePair('-PO3H2', '[!O]P(=O)([OH])[OH]', '[!O]P(=O)([OH])[O-]'),
     AcidBasePair('-CO2H', 'C(=O)[OH]', 'C(=O)[O-]'),
     AcidBasePair('thiophenol', 'c[SH]', 'c[S-]'),
-    AcidBasePair('(-OPO3H)-', 'OP(=O)([OH])[O-]', 'OP(=O)([O-])[O-]'),
-    AcidBasePair('(-PO3H)-', '[!O]P(=O)([OH])[O-]', '[!O]P(=O)([O-])[O-]'),
+    AcidBasePair('(-OPO3H)-', 'OP(=O)([O-])[OH]', 'OP(=O)([O-])[O-]'),
+    AcidBasePair('(-PO3H)-', '[!O]P(=O)([O-])[OH]', '[!O]P(=O)([O-])[O-]'),
     AcidBasePair('phthalimide', 'O=C2c1ccccc1C(=O)[NH]2', 'O=C2c1ccccc1C(=O)[N-]2'),
     AcidBasePair('CO3H (peracetyl)', 'C(=O)O[OH]', 'C(=O)O[O-]'),
     AcidBasePair('alpha-carbon-hydrogen-nitro group', 'O=N(O)[CH]', 'O=N(O)[C-]'),
@@ -82,21 +81,21 @@ ACID_BASE_PAIRS = (
     AcidBasePair('-BO2H2', '[!O]B([OH])[OH]', '[!O]B([OH])[O-]'),
     AcidBasePair('phenol', 'c[OH]', 'c[O-]'),
     AcidBasePair('SH (aliphatic)', 'C[SH]', 'C[S-]'),
-    AcidBasePair('(-OBO2H)-', 'OB([OH])[O-]', 'OB([O-])[O-]'),
-    AcidBasePair('(-BO2H)-', '[!O]B([OH])[O-]', '[!O]B([O-])[O-]'),
-    AcidBasePair('cyclopentadiene', '[CH2]1C=CC=C1', '[C-]1C=CC=C1'),
+    AcidBasePair('(-OBO2H)-', 'OB([O-])[OH]', 'OB([O-])[O-]'),
+    AcidBasePair('(-BO2H)-', '[!O]B([O-])[OH]', '[!O]B([O-])[O-]'),
+    AcidBasePair('cyclopentadiene', 'C1=CC=C[CH2]1', 'c1ccc[cH-]1'),
     AcidBasePair('-CONH2', 'C(=O)[NH2]', 'C(=O)[NH-]'),
-    AcidBasePair('imidazole', 'c1cnc[n]1', 'c1cnc[n-]1'),
-    AcidBasePair('-OH', '[CX4][OH]', '[CX4][O-]'),
-    AcidBasePair('alpha-carbon-hydrogen-keto group', 'O=C[CH+0]', 'O=C[C-]'),
-    AcidBasePair('alpha-carbon-hydrogen-acetyl ester group', 'OC(=O)[CH+0]', 'OC(=O)[C-]'),
+    AcidBasePair('imidazole', 'c1cnc[nH]1', 'c1cnc[n-]1'),
+    AcidBasePair('-OH (aliphatic alcohol)', '[CX4][OH]', '[CX4][O-]'),
+    AcidBasePair('alpha-carbon-hydrogen-keto group', 'O=C([!O])[C!H0+0]', 'O=C([!O])[C-]'),
+    AcidBasePair('alpha-carbon-hydrogen-acetyl ester group', 'OC(=O)[C!H0+0]', 'OC(=O)[C-]'),
     AcidBasePair('sp carbon hydrogen', 'C#[CH]', 'C#[C-]'),
-    AcidBasePair('alpha-carbon-hydrogen-sulfone group', 'CS(=O)(=O)C[CH+0]', 'CS(=O)(=O)C[C-]'),
-    AcidBasePair('alpha-carbon-hydrogen-sulfoxide group', 'C[SD3](=O)C[CH+0]', 'C[SD3](=O)C[C-]'),
+    AcidBasePair('alpha-carbon-hydrogen-sulfone group', 'CS(=O)(=O)[C!H0+0]', 'CS(=O)(=O)[C-]'),
+    AcidBasePair('alpha-carbon-hydrogen-sulfoxide group', 'C[SD3](=O)[C!H0+0]', 'C[SD3](=O)[C-]'),
     AcidBasePair('-NH2', '[CX4][NH2]', '[CX4][NH-]'),
-    AcidBasePair('benzyl hydrogen', 'c[CD4H]', 'c[CD3-]'),
-    AcidBasePair('sp2-carbon hydrogen', '[CX3]=[CX3H]', '[CX3]=[CX2-]'),
-    AcidBasePair('sp3-carbon hydrogen', '[CX4H]', '[CX3-]'),
+    AcidBasePair('benzyl hydrogen', 'c[CX4H2]', 'c[CX3H-]'),
+    AcidBasePair('sp2-carbon hydrogen', '[CX3]=[CX3!H0+0]', '[CX3]=[CX2-]'),
+    AcidBasePair('sp3-carbon hydrogen', '[CX4!H0+0]', '[CX3-]'),
 )
 
 
@@ -185,13 +184,17 @@ class Reionizer(object):
         charge_diff = Chem.GetFormalCharge(mol) - start_charge
         # If molecule is now neutral, assume everything is now fixed
         # But otherwise, if charge has become more positive, look for additional protonated acid groups to ionize
+        # TODO: Test case for this
         if not current_charge == 0:
             while charge_diff > 0:
                 ppos, poccur = self._strongest_protonated(mol)
                 log.info('Ionizing %s to balance previous charge corrections', self.acid_base_pairs[ppos].name)
                 patom = mol.GetAtomWithIdx(poccur[-1])
                 patom.SetFormalCharge(patom.GetFormalCharge() - 1)
-                patom.SetNumExplicitHs(max(0, patom.GetNumExplicitHs() - 1))
+                if patom.GetNumExplicitHs() > 0:
+                    patom.SetNumExplicitHs(patom.GetNumExplicitHs() - 1)
+                # else:
+                patom.UpdatePropertyCache()
                 charge_diff -= 1
 
         while True:
@@ -199,17 +202,36 @@ class Reionizer(object):
             ipos, ioccur = self._weakest_ionized(mol)
             if ioccur and poccur and ppos < ipos:
                 if poccur[-1] == ioccur[-1]:
-                    raise StandardizeError('Reionizer entered an infinite loop! Please report as a MolVS bug.')
+                    # Bad! H wouldn't be moved, resulting in infinite loop.
+                    log.warn('Aborted reionization due to unexpected situation')
+                    break
                 log.info('Moved proton from %s to %s', self.acid_base_pairs[ppos].name, self.acid_base_pairs[ipos].name)
+
+                # Remove hydrogen from strongest protonated
                 patom = mol.GetAtomWithIdx(poccur[-1])
                 patom.SetFormalCharge(patom.GetFormalCharge() - 1)
-                patom.SetNumExplicitHs(max(0, patom.GetNumExplicitHs() - 1))
+                # If no implicit Hs to autoremove, and at least 1 explicit H to remove, reduce explicit count by 1
+                if patom.GetNumImplicitHs() == 0 and patom.GetNumExplicitHs() > 0:
+                    patom.SetNumExplicitHs(patom.GetNumExplicitHs() - 1)
+                    # TODO: Remove any chiral label on patom?
+                patom.UpdatePropertyCache()
+
+                # Add hydrogen to weakest ionized
                 iatom = mol.GetAtomWithIdx(ioccur[-1])
                 iatom.SetFormalCharge(iatom.GetFormalCharge() + 1)
-                iatom.SetNumExplicitHs(iatom.GetTotalNumHs() + 1)
+                # Increase explicit H count if no implicit, or aromatic N or P, or non default valence state
+                if (iatom.GetNoImplicit() or
+                        ((patom.GetAtomicNum() == 7 or patom.GetAtomicNum() == 15) and patom.GetIsAromatic()) or
+                        iatom.GetTotalValence() not in list(Chem.GetPeriodicTable().GetValenceList(iatom.GetAtomicNum()))):
+                    iatom.SetNumExplicitHs(iatom.GetNumExplicitHs() + 1)
+                iatom.UpdatePropertyCache()
             else:
-                Chem.SanitizeMol(mol)
-                return mol
+                break
+
+        # TODO: Canonical ionization position if multiple equivalent positions?
+
+        Chem.SanitizeMol(mol)
+        return mol
 
     def _strongest_protonated(self, mol):
         for position, pair in enumerate(self.acid_base_pairs):
