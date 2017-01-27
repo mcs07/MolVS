@@ -16,7 +16,7 @@ quality, help with de-duplication and identify relationships between molecules.
 
 setup(
     name='MolVS',
-    version='0.0.8',
+    version='0.0.9',
     author='Matt Swain',
     author_email='m.swain@me.com',
     license='MIT',
