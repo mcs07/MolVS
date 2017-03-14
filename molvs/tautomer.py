@@ -60,7 +60,7 @@ class TautomerTransform(object):
         return Chem.MolFromSmarts(self.tautomer_str)
 
     def __repr__(self):
-        return 'TautomerTransform({!r}, {!r}, {!r}, {!r}, {!r})'.format(self.name, self.tautomer_str, self.bonds, self.charges)
+        return 'TautomerTransform({!r}, {!r}, {!r}, {!r})'.format(self.name, self.tautomer_str, self.bonds, self.charges)
 
     def __str__(self):
         return self.name
