@@ -12,6 +12,9 @@ from molvs.standardize import standardize_smiles
 
 logging.basicConfig(level=logging.DEBUG)
 
+def test_should_complete():
+    """Reionization should not infinitely loop forever on this molecule."""
+    assert standardize_smiles('CCCCCCCCCCCCCCCCCC(=O)CC(=C)C(=O)O[Ti](=O)(OC(C)C)C(C)C') == 'C=C(CC(=O)[CH-]CCCCCCCCCCCCCCCC)C(=O)[O-].CC(C)[O-].CCC.[O-2].[Ti+5]'
 
 def test_aromaticity():
     """Check aromaticity is correctly perceived."""
