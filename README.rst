@@ -4,7 +4,7 @@ MolVS: Molecule Validation and Standardization
 .. image:: https://img.shields.io/pypi/v/MolVS.svg?style=flat-square
     :target: https://pypi.python.org/pypi/MolVS
 
-.. image:: https://img.shields.io/github/license/MolVS.svg?style=flat-square
+.. image:: https://img.shields.io/github/license/mcs07/MolVS.svg?style=flat-square
     :target: https://github.com/mcs07/MolVS/blob/master/LICENSE
 
 .. image:: https://img.shields.io/travis/mcs07/MolVS/master.svg?style=flat-square
