@@ -1,0 +1,9 @@
+name: molvs
+channels:
+- conda-forge
+- defaults
+dependencies:
+- numpy=1.14.0
+- pytest=3.4.0
+- rdkit=Release_2017_09_3
+- six=1.11.0
