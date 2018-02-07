@@ -197,6 +197,7 @@ class Reionizer(object):
                 patom.UpdatePropertyCache()
                 charge_diff -= 1
 
+        already_moved = set()
         while True:
             ppos, poccur = self._strongest_protonated(mol)
             ipos, ioccur = self._weakest_ionized(mol)
@@ -205,6 +206,13 @@ class Reionizer(object):
                     # Bad! H wouldn't be moved, resulting in infinite loop.
                     log.warn('Aborted reionization due to unexpected situation')
                     break
+
+                key = tuple(sorted([poccur[-1], ioccur[-1]]))
+                if key in already_moved:
+                    log.warn('Aborting reionization to avoid infinite loop due to it being ambiguous where to put a Hydrogen')
+                    break
+                already_moved.add(key)
+
                 log.info('Moved proton from %s to %s', self.acid_base_pairs[ppos].name, self.acid_base_pairs[ipos].name)
 
                 # Remove hydrogen from strongest protonated
