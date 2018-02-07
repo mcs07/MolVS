@@ -26,7 +26,6 @@ setup(
     long_description=long_description,
     keywords='chemistry cheminformatics rdkit',
     zip_safe=False,
-    setup_requires=['pytest-runner'],
     tests_require=['pytest'],
     install_requires=['six'],
     entry_points={'console_scripts': ['molvs = molvs.cli:main']},

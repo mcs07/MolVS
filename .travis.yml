@@ -1,29 +1,28 @@
 language: python
 python:
   - "2.7"
-  - "3.4"
   - "3.5"
+  - "3.6"
 sudo: false
-before_install:
-  - wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
+install:
+  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
+      wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
+    else
+      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+    fi
   - bash miniconda.sh -b -p $HOME/conda
   - export PATH="$HOME/conda/bin:$PATH"
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
+  - conda config --add channels conda-forge
   - conda update -q conda
   - conda info -a
-  - conda create -q -n tenv python=$TRAVIS_PYTHON_VERSION pip cmake pytest
-  - source activate tenv
-addons:
-  apt:
-    packages:
-      - build-essential
-      - libjpeg-dev
-install:
-  - conda install -q numpy pillow pandas
-  - conda install -q -c https://conda.binstar.org/rdkit rdkit
-  - pip install coveralls
+  - conda create -q -n molvs python=$TRAVIS_PYTHON_VERSION
+  - conda env update -q -n molvs -f environment.yml
+  - source activate molvs
+  - conda install -q coverage coveralls pytest-cov
+  - python setup.py install
 script:
-  - coverage run --source=molvs setup.py test
+  - pytest --cov=molvs tests
 after_success:
   - coveralls

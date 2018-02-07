@@ -35,11 +35,12 @@ Quick guide to contributing
 1. `Fork the MolVS repository on GitHub`_, then clone your fork to your local machine::
 
     git clone https://github.com/<username>/MolVS.git
-
-2. Install the development requirements::
-
     cd molvs
-    pip install -r requirements/development.txt
+
+2. Install the development requirements into a `conda environment`_::
+
+    conda env create -n molvs -f environment.yml
+    source activate molvs
 
 3. Create a new branch for your changes::
 
@@ -47,9 +48,7 @@ Quick guide to contributing
 
 4. Make your changes or additions. Ideally add some tests and ensure they pass by running::
 
-    nosetests
-
-   The final line of the output should be ``OK``.
+    pytest
 
 5. Commit your changes and push to your fork on GitHub::
 
@@ -72,6 +71,7 @@ Tips
 .. _`Issue Tracker`: https://github.com/mcs07/MolVS/issues
 .. _`source code`: https://github.com/mcs07/MolVS
 .. _`Fork the MolVS repository on GitHub`: https://github.com/mcs07/MolVS/fork
+.. _`conda environment`: https://conda.io/docs/
 .. _`Submit a pull request`: https://github.com/mcs07/MolVS/compare/
 .. _`squashing your commits`: http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html
 .. _`PEP8`: https://www.python.org/dev/peps/pep-0008
