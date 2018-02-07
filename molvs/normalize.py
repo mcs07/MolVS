@@ -152,7 +152,7 @@ class Normalizer(object):
                 # For loop finishes normally, all applicable transforms have been applied
                 return mol
         # If we're still going after max_restarts (default 200), stop and warn, but still return the mol
-        log.warn('Gave up normalization after %s restarts', self.max_restarts)
+        log.warning('Gave up normalization after %s restarts', self.max_restarts)
         return mol
 
     def _apply_transform(self, mol, rule):

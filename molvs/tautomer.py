@@ -309,7 +309,7 @@ class TautomerEnumerator(object):
             if len(tautomers) == len(done):
                 break
         else:
-            log.warn('Tautomer enumeration stopped at maximum %s', self.max_tautomers)
+            log.warning('Tautomer enumeration stopped at maximum %s', self.max_tautomers)
         # Clean up stereochemistry
         for tautomer in tautomers.values():
             Chem.AssignStereochemistry(tautomer, force=True, cleanIt=True)

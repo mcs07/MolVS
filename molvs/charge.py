@@ -204,12 +204,12 @@ class Reionizer(object):
             if ioccur and poccur and ppos < ipos:
                 if poccur[-1] == ioccur[-1]:
                     # Bad! H wouldn't be moved, resulting in infinite loop.
-                    log.warn('Aborted reionization due to unexpected situation')
+                    log.warning('Aborted reionization due to unexpected situation')
                     break
 
                 key = tuple(sorted([poccur[-1], ioccur[-1]]))
                 if key in already_moved:
-                    log.warn('Aborting reionization to avoid infinite loop due to it being ambiguous where to put a Hydrogen')
+                    log.warning('Aborting reionization to avoid infinite loop due to it being ambiguous where to put a Hydrogen')
                     break
                 already_moved.add(key)
 
