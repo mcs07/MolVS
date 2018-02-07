@@ -184,10 +184,11 @@ class Reionizer(object):
         charge_diff = Chem.GetFormalCharge(mol) - start_charge
         # If molecule is now neutral, assume everything is now fixed
         # But otherwise, if charge has become more positive, look for additional protonated acid groups to ionize
-        # TODO: Test case for this
         if not current_charge == 0:
             while charge_diff > 0:
                 ppos, poccur = self._strongest_protonated(mol)
+                if ppos is None:
+                    break
                 log.info('Ionizing %s to balance previous charge corrections', self.acid_base_pairs[ppos].name)
                 patom = mol.GetAtomWithIdx(poccur[-1])
                 patom.SetFormalCharge(patom.GetFormalCharge() - 1)
