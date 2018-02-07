@@ -115,8 +115,22 @@ def test_reionize3():
 
 def test_should_complete():
     """Reionization should not infinitely loop forever on these molecules."""
+    # GitHub Issue #14
     assert standardize_smiles('CCCCCCCCCCCCCCCCCC(=O)CC(=C)C(=O)O[Ti](=O)(OC(C)C)C(C)C') == 'C=C(CC(=O)[CH-]CCCCCCCCCCCCCCCC)C(=O)[O-].CC(C)[O-].CCC.[O-2].[Ti+5]'
     assert standardize_smiles('OP(=O)(O)[O-].OP(=O)([O-])[O-].[O-]S(=O)(=O)[O-].[Na+].[Na+].[Na+].[Mg+2].[Cl-].[Cl-].[K+].[K+]') == 'O=P([O-])(O)O.O=P([O-])([O-])O.O=S(=O)([O-])[O-].[Cl-].[Cl-].[K+].[K+].[Mg+2].[Na+].[Na+].[Na+]'
+
+
+def test_forced_charge1():
+    """Test forced charge correction maintaining overall neutral charge."""
+    assert standardize_smiles('[Na].O=C(O)c1ccccc1') == 'O=C([O-])c1ccccc1.[Na+]'
+
+
+def test_forced_charge2():
+    """Test forced charge correction with no corresponding proton for neutralization."""
+    # GitHub Issue #15
+    assert standardize_smiles('[Na].[Na]') == '[Na+].[Na+]'
+    # TODO: Arguably should become selenite ion... O=[Se]([O-])[O-]. Need an AcidBasePair?
+    assert standardize_smiles('[Na].[Na].O[Se](O)=O') == 'O=[Se](O)O.[Na+].[Na+]'
 
 
 # def test_reionize3():
