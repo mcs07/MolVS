@@ -19,7 +19,7 @@ install:
   - conda create -q -n molvs python=$TRAVIS_PYTHON_VERSION
   - conda env update -q -n molvs -f environment.yml
   - source activate molvs
-  - conda install -q coverage coveralls pytest-cov
+  - conda install -q -c conda-forge coverage coveralls pytest-cov
   - python setup.py install
 script:
   - pytest --cov=molvs tests
