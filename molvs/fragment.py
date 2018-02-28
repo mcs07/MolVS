@@ -51,6 +51,7 @@ class FragmentPattern(object):
 #: The default list of :class:`FragmentPatterns <molvs.fragment.FragmentPattern>` to be used by
 #: :class:`~molvs.fragment.FragmentRemover`.
 REMOVE_FRAGMENTS = (
+	FragmentPattern('hydrogen', '[H]'),
     FragmentPattern('fluorine', '[F]'),
     FragmentPattern('chlorine', '[Cl]'),
     FragmentPattern('bromine', '[Br]'),
