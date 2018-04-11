@@ -1,5 +1,22 @@
 # Change Log
 
+## [v0.1.1](https://github.com/mcs07/MolVS/tree/v0.1.1) (2018-04-11)
+[Full Changelog](https://github.com/mcs07/MolVS/compare/v0.1.0...v0.1.1)
+
+**Implemented enhancements:**
+
+- Add hydrogen to REMOVE\_FRAGMENTS list [\#23](https://github.com/mcs07/MolVS/pull/23) ([JoshuaMeyers](https://github.com/JoshuaMeyers))
+
+**Fixed bugs:**
+
+- Fluorine considered metal [\#24](https://github.com/mcs07/MolVS/issues/24)
+- Fix mistake in metal SMARTS [\#25](https://github.com/mcs07/MolVS/pull/25) ([mcs07](https://github.com/mcs07))
+
+**Closed issues:**
+
+- MolVS 0.1.0 Standardization fails on Python 3 [\#22](https://github.com/mcs07/MolVS/issues/22)
+- molvs hugs on some molecules [\#21](https://github.com/mcs07/MolVS/issues/21)
+
 ## [v0.1.0](https://github.com/mcs07/MolVS/tree/v0.1.0) (2018-02-07)
 [Full Changelog](https://github.com/mcs07/MolVS/compare/v0.0.9...v0.1.0)
 
