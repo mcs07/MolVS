@@ -28,16 +28,16 @@ There are sensible defaults that make it easy to get started::
 Installation
 ------------
 
-To install MolVS, simply run::
+To install MolVS with Anaconda Oython, simply run::
 
-    pip install molvs
+    conda install molvs
 
 Alternatively, try one of the other `installation options`_.
 
 Documentation
 -------------
 
-Full documentation is available at http://molvs.readthedocs.org.
+Full documentation is available at http://molvs.readthedocs.io.
 
 Contribute
 ----------
@@ -64,7 +64,7 @@ There are a number of projects with similar goals that take differing approaches
 
 
 .. _`RDKit chemistry framework`: http://www.rdkit.org
-.. _`installation options`: http://molvs.readthedocs.org/en/latest/guide/install.html
+.. _`installation options`: http://molvs.readthedocs.io/en/latest/guide/install.html
 .. _`source code`: https://github.com/mcs07/MolVS
 .. _`Issue Tracker`: https://github.com/mcs07/MolVS/issues
 .. _`MIT license`: https://github.com/mcs07/MolVS/blob/master/LICENSE
