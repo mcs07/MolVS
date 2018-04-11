@@ -49,8 +49,8 @@ Option 2: Download the latest release
 
 Alternatively, `download the latest release`_ manually and install yourself::
 
-    tar -xzvf MolVS-0.1.0.tar.gz
-    cd MolVS-0.1.0
+    tar -xzvf MolVS-0.1.1.tar.gz
+    cd MolVS-0.1.1
     python setup.py install
 
 The setup.py command will install MolVS in your `site-packages` folder so it is automatically available to all your
