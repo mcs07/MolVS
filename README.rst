@@ -30,7 +30,7 @@ Installation
 
 To install MolVS with Anaconda Oython, simply run::
 
-    conda install molvs
+    conda install -c conda-forge molvs
 
 Alternatively, try one of the other `installation options`_.
 
