@@ -28,7 +28,7 @@ There are sensible defaults that make it easy to get started::
 Installation
 ------------
 
-To install MolVS with Anaconda Oython, simply run::
+To install MolVS with Anaconda Python, simply run::
 
     conda install -c conda-forge molvs
 
