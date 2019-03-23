@@ -257,7 +257,7 @@ class Standardizer(object):
         """
         :returns: A callable :class:`~molvs.charge.Uncharger` instance.
         """
-        return Uncharger()
+        return Uncharger(acid_base_pairs=self.acid_base_pairs)
 
     @memoized_property
     def remove_fragments(self):

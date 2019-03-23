@@ -256,33 +256,23 @@ class Reionizer(object):
 
 
 class Uncharger(object):
-    """Class for neutralizing ionized acids and bases.
+    """Class for neutralizing charges in a molecule.
 
-    This class uncharges molecules by adding and/or removing hydrogens. For zwitterions, hydrogens are moved to
-    eliminate charges where possible. However, in cases where there is a positive charge that is not neutralizable, an
-    attempt is made to also preserve the corresponding negative charge.
-
-    The method is derived from the neutralise module in `Francis Atkinson's standardiser tool
-    <https://github.com/flatkinson/standardiser>`_, which is released under the Apache License v2.0.
+    This class uncharges molecules by adding and/or removing hydrogens. In cases where there is a positive charge that
+    is not neutralizable, any corresponding negative charge is also preserved.
     """
 
-    def __init__(self):
+    def __init__(self, acid_base_pairs=ACID_BASE_PAIRS):
         log.debug('Initializing Uncharger')
-        #: Neutralizable positive charge (with hydrogens attached)
-        self._pos_h = Chem.MolFromSmarts('[+!H0!$(*~[-])]')
-        #: Non-neutralizable positive charge (no hydrogens attached)
-        self._pos_quat = Chem.MolFromSmarts('[+H0!$(*~[-])]')
-        #: Negative charge, not bonded to a positive charge with no hydrogens
-        self._neg = Chem.MolFromSmarts('[-!$(*~[+H0])]')
-        #: Negative oxygen bonded to [C,P,S]=O, negative aromatic nitrogen?
-        self._neg_acid = Chem.MolFromSmarts('[$([O-][C,P,S]=O),$([n-]1nnnc1),$(n1[n-]nnc1)]')
+        self.acid_base_pairs = acid_base_pairs
+        self.nitro = Chem.MolFromSmarts('[!#8][NX3+](=O)[O-]')
 
     def __call__(self, mol):
         """Calling an Uncharger instance like a function is the same as calling its uncharge(mol) method."""
         return self.uncharge(mol)
 
     def uncharge(self, mol):
-        """Neutralize molecule by adding/removing hydrogens. Attempts to preserve zwitterions.
+        """Neutralize molecule by adding/removing hydrogens.
 
         :param mol: The molecule to uncharge.
         :type mol: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
@@ -291,37 +281,53 @@ class Uncharger(object):
         """
         log.debug('Running Uncharger')
         mol = copy.deepcopy(mol)
-        # Get atom ids for matches
-        p = [x[0] for x in mol.GetSubstructMatches(self._pos_h)]
-        q = [x[0] for x in mol.GetSubstructMatches(self._pos_quat)]
-        n = [x[0] for x in mol.GetSubstructMatches(self._neg)]
-        a = [x[0] for x in mol.GetSubstructMatches(self._neg_acid)]
-        # Neutralize negative charges
-        if q:
-            # Surplus negative charges more than non-neutralizable positive charges
-            neg_surplus = len(n) - len(q)
-            if a and neg_surplus > 0:
-                # zwitterion with more negative charges than quaternary positive centres
-                while neg_surplus > 0 and a:
-                    # Add hydrogen to first negative acid atom, increase formal charge
-                    # Until quaternary positive == negative total or no more negative acid
-                    atom = mol.GetAtomWithIdx(a.pop(0))
-                    atom.SetNumExplicitHs(atom.GetNumExplicitHs() + 1)
-                    atom.SetFormalCharge(atom.GetFormalCharge() + 1)
-                    neg_surplus -= 1
-                    log.info('Removed negative charge')
-        else:
-            #
-            for atom in [mol.GetAtomWithIdx(x) for x in n]:
-                while atom.GetFormalCharge() < 0:
-                    atom.SetNumExplicitHs(atom.GetNumExplicitHs() + 1)
-                    atom.SetFormalCharge(atom.GetFormalCharge() + 1)
-                    log.info('Removed negative charge')
+
         # Neutralize positive charges
-        for atom in [mol.GetAtomWithIdx(x) for x in p]:
-            # Remove hydrogen and reduce formal change until neutral or no more hydrogens
+        pos_remainder = 0
+        neg_count = 0
+        for atom in mol.GetAtoms():
+            # Remove hydrogen from positive atoms and reduce formal change until neutral or no more hydrogens
             while atom.GetFormalCharge() > 0 and atom.GetNumExplicitHs() > 0:
                 atom.SetNumExplicitHs(atom.GetNumExplicitHs() - 1)
                 atom.SetFormalCharge(atom.GetFormalCharge() - 1)
                 log.info('Removed positive charge')
+            chg = atom.GetFormalCharge()
+            if chg > 0:
+                # Record number of non-neutralizable positive charges
+                pos_remainder += chg
+            elif chg < 0:
+                # Record total number of negative charges
+                neg_count += -chg
+
+        # Choose negative charges to leave in order to balance non-neutralizable positive charges
+        neg_skip = self._get_neg_skip(mol, pos_remainder)
+
+        # Neutralize remaining negative charges
+        for atom in mol.GetAtoms():
+            log.info(atom.GetIdx())
+            if atom.GetIdx() in neg_skip:
+                continue
+            # Make sure to stop when neg_count <= pos_remainder, as it is possible that neg_skip is not large enough
+            while atom.GetFormalCharge() < 0 and neg_count > pos_remainder:
+                atom.SetNumExplicitHs(atom.GetNumExplicitHs() + 1)
+                atom.SetFormalCharge(atom.GetFormalCharge() + 1)
+                neg_count -= 1
+                log.info('Removed negative charge')
         return mol
+
+    def _get_neg_skip(self, mol, pos_count):
+        """Get negatively charged atoms to skip (up to pos_count)."""
+        neg_skip = set()
+        if pos_count:
+            # Get negative oxygens in charge-separated nitro groups TODO: Any other special cases to skip?
+            for occurrence in mol.GetSubstructMatches(self.nitro):
+                neg_skip.add(occurrence[-1])
+                if len(neg_skip) >= pos_count:
+                    return neg_skip
+            # Get strongest ionized acids
+            for position, pair in enumerate(self.acid_base_pairs):
+                for occurrence in mol.GetSubstructMatches(pair.base):
+                    neg_skip.add(occurrence[-1])
+                    if len(neg_skip) >= pos_count:
+                        return neg_skip
+        return neg_skip

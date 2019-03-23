@@ -10,7 +10,7 @@ import logging
 from rdkit import Chem
 
 from molvs.standardize import Standardizer, standardize_smiles
-from molvs.charge import Reionizer
+from molvs.charge import Reionizer, Uncharger
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -20,6 +20,15 @@ def charge_parent_smiles(smiles, prefer_organic=False):
     """Utility function that returns the charge parent SMILES for given a SMILES string."""
     mol = Chem.MolFromSmiles(smiles, sanitize=False)
     mol = Standardizer(prefer_organic=prefer_organic).charge_parent(mol)
+    if mol:
+        return Chem.MolToSmiles(mol, isomericSmiles=True)
+
+
+def uncharge_smiles(smiles):
+    """Utility function that returns the uncharged SMILES for a given SMILES string."""
+    mol = Chem.MolFromSmiles(smiles)
+    u = Uncharger()
+    mol = u.uncharge(mol)
     if mol:
         return Chem.MolToSmiles(mol, isomericSmiles=True)
 
@@ -60,28 +69,48 @@ def test_charge_parent7():
 
 
 def test_charge_parent8():
-    """"""
+    """Pick organic fragment and neutralise."""
     assert charge_parent_smiles('C[NH+](C)(C).[Cl-]') == 'CN(C)C'
 
 
 def test_charge_parent9():
     """No organic fragments."""
-    assert charge_parent_smiles('[N+](=O)([O-])[O-]') == 'O=[N+]([O-])[O-]'
+    assert charge_parent_smiles('[N+](=O)([O-])[O-]') == 'O=[N+]([O-])O'
 
 
 def test_charge_parent10():
     """No organic fragments."""
-    assert charge_parent_smiles('[N+](=O)([O-])[O-]', prefer_organic=True) == 'O=[N+]([O-])[O-]'
+    assert charge_parent_smiles('[N+](=O)([O-])[O-]', prefer_organic=True) == 'O=[N+]([O-])O'
 
 
 def test_charge_parent11():
     """Larger inorganic fragment should be chosen."""
-    assert charge_parent_smiles('[N+](=O)([O-])[O-].[CH2]') == 'O=[N+]([O-])[O-]'
+    assert charge_parent_smiles('[N+](=O)([O-])[O-].[CH2]') == 'O=[N+]([O-])O'
 
 
 def test_charge_parent12():
     """Smaller organic fragment should be chosen over larger inorganic fragment."""
     assert charge_parent_smiles('[N+](=O)([O-])[O-].[CH2]', prefer_organic=True) == '[CH2]'
+
+
+def test_charge_parent13():
+    """Single oxygen should be protonated, the other left to balance the positive nitrogen."""
+    assert charge_parent_smiles('C[N+](C)(C)CC([O-])C[O-]') == 'C[N+](C)(C)CC([O-])CO'
+
+
+def test_charge_parent14():
+    """Strongest acid should be left ionized."""
+    assert charge_parent_smiles('[O-]C(=O)C[n+]1ccn2cccc([O-])c12') == 'O=C([O-])C[n+]1ccn2cccc(O)c21'
+
+
+def test_charge_parent15():
+    """All charges should be neutralized."""
+    assert charge_parent_smiles('[NH+](C)(C)CC([O-])C[O-]') == 'CN(C)CC(O)CO'
+
+
+def test_charge_parent16():
+    """All charges should be neutralized."""
+    assert charge_parent_smiles('CNCC([O-])C[O-]') == 'CNCC(O)CO'
 
 
 def test_standardize():
@@ -131,6 +160,76 @@ def test_forced_charge2():
     assert standardize_smiles('[Na].[Na]') == '[Na+].[Na+]'
     # TODO: Arguably should become selenite ion... O=[Se]([O-])[O-]. Need an AcidBasePair?
     assert standardize_smiles('[Na].[Na].O[Se](O)=O') == 'O=[Se](O)O.[Na+].[Na+]'
+
+
+def test_uncharge():
+    """Test neutralization of ionized acids and bases."""
+    assert uncharge_smiles('C(C(=O)[O-])(Cc1n[n-]nn1)(C[NH3+])(C[N+](=O)[O-])') == 'NCC(Cc1nn[nH]n1)(C[N+](=O)[O-])C(=O)O'
+
+
+def test_uncharge2():
+    """Test preservation of zwitterion."""
+    assert uncharge_smiles('n(C)1cc[n+]2cccc([O-])c12') == 'Cn1cc[n+]2cccc([O-])c12'
+
+
+def test_uncharge3():
+    """Choline should be left with a positive charge."""
+    assert uncharge_smiles('C[N+](C)(C)CCO') == 'C[N+](C)(C)CCO'
+
+
+def test_uncharge4():
+    """This should have the hydrogen removed to give deanol as a charge parent."""
+    assert uncharge_smiles('C[NH+](C)CCO') == 'CN(C)CCO'
+
+
+def test_uncharge5():
+    """Overall system is already neutral."""
+    assert uncharge_smiles('[Na+].O=C([O-])c1ccccc1') == 'O=C([O-])c1ccccc1.[Na+]'
+
+
+def test_uncharge6():
+    """Benzoate ion to benzoic acid."""
+    assert uncharge_smiles('O=C([O-])c1ccccc1') == 'O=C(O)c1ccccc1'
+
+
+def test_uncharge7():
+    """Charges in histidine should be neutralized."""
+    assert uncharge_smiles('[NH3+]C(Cc1cnc[nH]1)C(=O)[O-]') == 'NC(Cc1cnc[nH]1)C(=O)O'
+
+
+def test_uncharge8():
+    """Neutralize both fragments."""
+    assert uncharge_smiles('C[NH+](C)(C).[Cl-]') == 'CN(C)C.Cl'
+
+
+def test_uncharge9():
+    """Neutralise one oxygen."""
+    assert uncharge_smiles('[N+](=O)([O-])[O-]') == 'O=[N+]([O-])O'
+
+
+def test_uncharge11():
+    """Smaller organic fragment should be chosen over larger inorganic fragment."""
+    assert uncharge_smiles('[N+](=O)([O-])[O-].[CH2]') == 'O=[N+]([O-])O.[CH2]'
+
+
+def test_uncharge13():
+    """Single oxygen should be protonated, the other left to balance the positive nitrogen."""
+    assert uncharge_smiles('C[N+](C)(C)CC([O-])C[O-]') == 'C[N+](C)(C)CC([O-])CO'
+
+
+def test_uncharge14():
+    """Strongest acid should be left ionized."""
+    assert uncharge_smiles('[O-]C(=O)C[n+]1ccn2cccc([O-])c12') == 'O=C([O-])C[n+]1ccn2cccc(O)c21'
+
+
+def test_uncharge15():
+    """All charges should be neutralized."""
+    assert uncharge_smiles('[NH+](C)(C)CC([O-])C[O-]') == 'CN(C)CC(O)CO'
+
+
+def test_uncharge16():
+    """All charges should be neutralized."""
+    assert uncharge_smiles('CNCC([O-])C[O-]') == 'CNCC(O)CO'
 
 
 # def test_reionize3():
