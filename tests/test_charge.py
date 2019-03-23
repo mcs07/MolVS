@@ -110,7 +110,7 @@ def test_reionize3():
     mol = Chem.MolFromSmiles('C[N+]1=C[CH-]N(C(=N)N)/C1=C/[N+](=O)[O-]')
     r = Reionizer()
     mol = r.reionize(mol)
-    assert Chem.MolToSmiles(mol) == 'C[N+]1=CCN(C(=N)N)C1=[C-][N+](=O)[O-]'
+    assert Chem.MolToSmiles(mol) == 'C[N+]1=CCN(C(=N)N)/C1=[C-]/[N+](=O)[O-]'
 
 
 def test_should_complete():
