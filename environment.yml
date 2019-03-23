@@ -3,7 +3,7 @@ channels:
 - conda-forge
 - defaults
 dependencies:
-- numpy=1.14.0
-- pytest=3.4.0
-- rdkit=Release_2017_09_3
-- six=1.11.0
+- numpy=1.16.2
+- pytest=4.3.1
+- rdkit=2018.09.1
+- six=1.12.0
