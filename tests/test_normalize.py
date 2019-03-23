@@ -55,7 +55,7 @@ def test_1_3_charge_recombination_exception():
 
 def test_1_5_charge_recombination():
     """Test 1,5-separated charges are recombined."""
-    assert normalize_smiles('C[N+](C)=C\C=C\[O-]') == 'CN(C)C=CC=O'
+    assert normalize_smiles('C[N+](C)=C\\C=C\\[O-]') == 'CN(C)C=CC=O'
 
 
 def test_1_5_charge_recombination_exception():
