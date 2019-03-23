@@ -17,7 +17,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 def normalize_smiles(smiles):
     """Utility function that runs normalization rules on a given a SMILES string."""
-    mol = Chem.MolFromSmiles(smiles.encode('utf8'), sanitize=False)
+    mol = Chem.MolFromSmiles(smiles, sanitize=False)
     mol = Normalizer().normalize(mol)
     if mol:
         return Chem.MolToSmiles(mol, isomericSmiles=True)

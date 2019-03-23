@@ -18,14 +18,14 @@ logging.basicConfig(level=logging.DEBUG)
 
 def fragment_parent_smiles(smiles, prefer_organic=False):
     """Utility function that returns the fragment parent SMILES for given a SMILES string."""
-    mol = Chem.MolFromSmiles(smiles.encode('utf8'), sanitize=False)
+    mol = Chem.MolFromSmiles(smiles, sanitize=False)
     mol = Standardizer(prefer_organic=prefer_organic).fragment_parent(mol)
     return Chem.MolToSmiles(mol, isomericSmiles=True)
 
 
 def fragment_removal_smiles(smiles, leave_last=True):
     """Utility function that returns the result SMILES after FragmentRemover is applied to given a SMILES string."""
-    mol = Chem.MolFromSmiles(smiles.encode('utf8'))
+    mol = Chem.MolFromSmiles(smiles)
     mol = FragmentRemover(leave_last=leave_last).remove(mol)
     return Chem.MolToSmiles(mol, isomericSmiles=True)
 

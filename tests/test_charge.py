@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 def charge_parent_smiles(smiles, prefer_organic=False):
     """Utility function that returns the charge parent SMILES for given a SMILES string."""
-    mol = Chem.MolFromSmiles(smiles.encode('utf8'), sanitize=False)
+    mol = Chem.MolFromSmiles(smiles, sanitize=False)
     mol = Standardizer(prefer_organic=prefer_organic).charge_parent(mol)
     if mol:
         return Chem.MolToSmiles(mol, isomericSmiles=True)
