@@ -351,7 +351,7 @@ def test_mobile_double_stereochemistry_enumeration2():
 
 def test_mobile_double_stereochemistry_enumeration3():
     """Remove stereochemistry from mobile double bonds"""
-    assert enumerate_tautomers_smiles('C/C=C\C(C)=O') == {'C=C(O)C=CC', 'C=CCC(=C)O', 'CC=CC(C)=O', 'C=CCC(C)=O', 'C=CC=C(C)O'}
+    assert enumerate_tautomers_smiles('C/C=C\\C(C)=O') == {'C=C(O)C=CC', 'C=CCC(=C)O', 'CC=CC(C)=O', 'C=CCC(C)=O', 'C=CC=C(C)O'}
 
 
 def test_gaunine_enumeration():
