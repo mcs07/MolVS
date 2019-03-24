@@ -1,40 +1,38 @@
-- job: linux
-  pool:
-    vmImage: 'Ubuntu-16.04'
-  strategy:
-    matrix:
-      Python36:
-        python.version: '3.6'
-      Python37:
-        python.version: '3.7'
-    maxParallel: 4
+jobs:
+  - job: 'linux_test'
+    displayName: 'Linux Test'
+    pool:
+      vmImage: 'Ubuntu-16.04'
+    strategy:
+      matrix:
+        Python36:
+          PYTHON_VERSION: '3.6'
+        Python37:
+          PYTHON_VERSION: '3.7'
+      maxParallel: 4
 
-  steps:
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '$(python.version)'
-      architecture: 'x64'
+    steps:
 
-  - bash: echo "##vso[task.prependpath]/usr/share/miniconda/bin"
-    displayName: Add conda to PATH
+      - bash: echo "##vso[task.prependpath]/usr/share/miniconda/bin"
+        displayName: Add conda to PATH
 
-  - bash: sudo chown -R $USER /usr/share/miniconda
-    displayName: Take ownership of conda installation
+      - bash: sudo chown -R $USER /usr/share/miniconda
+        displayName: Take ownership of conda installation
 
-  - script: conda env create --yes --quiet --name molvs python=$(python.version)
-      displayName: Create conda environment
+      - script: conda env create --yes --quiet --name molvs python=$(PYTHON_VERSION)
+          displayName: Create conda environment
 
-  - script: conda env update --quiet --name molvs --file environment.yml
-    displayName: Install dependencies
+      - script: conda env update --quiet --name molvs --file environment.yml
+        displayName: Install dependencies
 
-  - bash: |
-      source activate molvs
-      python -m pip install . --no-deps
-      pytest --junitxml=result.xml
-    displayName: Run tests
+      - bash: |
+          source activate molvs
+          python -m pip install . --no-deps
+          pytest --junitxml=result.xml
+        displayName: Run tests
 
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFiles: 'result.xml'
-      testRunTitle: 'Python $(python.version)'
-    condition: succeededOrFailed()
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFiles: 'result.xml'
+          testRunTitle: 'Python $(PYTHON_VERSION)'
+        condition: succeededOrFailed()
