@@ -1,67 +1,96 @@
 jobs:
-  - job: 'Test'
-
+  - job: Test
     strategy:
       matrix:
         linux_python36:
-          VM_IMAGE: 'ubuntu-16.04'
+          VM_IMAGE: ubuntu-16.04
           PYTHON_VERSION: '3.6'
         linux_python37:
-          VM_IMAGE: 'ubuntu-16.04'
+          VM_IMAGE: ubuntu-16.04
           PYTHON_VERSION: '3.7'
         mac_python36:
-          VM_IMAGE: 'macOS-10.13'
+          VM_IMAGE: macOS-10.13
           PYTHON_VERSION: '3.6'
         mac_python37:
-          VM_IMAGE: 'macOS-10.13'
+          VM_IMAGE: macOS-10.13
           PYTHON_VERSION: '3.7'
         win_python36:
-          VM_IMAGE: 'vs2017-win2016'
+          VM_IMAGE: vs2017-win2016
           PYTHON_VERSION: '3.6'
         win_python37:
-          VM_IMAGE: 'vs2017-win2016'
+          VM_IMAGE: vs2017-win2016
           PYTHON_VERSION: '3.7'
       maxParallel: 4
-
     pool:
       vmImage: $(VM_IMAGE)
-
     steps:
-
       - bash: echo "##vso[task.prependpath]/usr/share/miniconda/bin"
         condition: eq( variables['Agent.OS'], 'Linux' )
         displayName: Add conda to PATH (Linux)
-
       - bash: echo "##vso[task.prependpath]$CONDA/bin"
         condition: eq( variables['Agent.OS'], 'Darwin' )
         displayName: Add conda to PATH (Mac)
-
       - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
         condition: eq( variables['Agent.OS'], 'Windows_NT' )
         displayName: Add conda to PATH (Windows)
-
       - script: conda env create --quiet --name molvs python=$(PYTHON_VERSION)
         displayName: Create conda environment
-
       - script: conda env update --quiet --name molvs --file environment.yml
         displayName: Install dependencies
-
       - bash: |
           source activate molvs
           python -m pip install . --no-deps
           pytest --junitxml=result.xml
         displayName: Run tests (Linux/Mac)
         condition: ne( variables['Agent.OS'], 'Windows_NT' )
-
       - script: |
           call activate molvs
           python -m pip install . --no-deps
           pytest --junitxml=result.xml
         displayName: Run tests (Windows)
         condition: eq( variables['Agent.OS'], 'Windows_NT' )
-
       - task: PublishTestResults@2
         inputs:
-          testResultsFiles: 'result.xml'
-          testRunTitle: 'Python $(PYTHON_VERSION) ($(VM_IMAGE))'
+          testResultsFiles: result.xml
+          testRunTitle: Python $(PYTHON_VERSION) ($(VM_IMAGE))
         condition: succeededOrFailed()
+
+  - job: Package
+    dependsOn: Test
+    pool:
+      vmImage: ubuntu-16.04
+    steps:
+      - bash: echo "##vso[task.prependpath]/usr/share/miniconda/bin"
+        displayName: Add conda to PATH (Linux)
+      - script: conda env create --quiet --name molvs --file environment.yml
+        displayName: Create conda environment
+      - script: |
+          source activate molvs
+          python setup.py sdist bdist_wheel --universal
+        displayName: Build sdist and wheel
+      - task: PublishPipelineArtifact@0
+        inputs:
+          artifactName: molvs-$(Build.BuildNumber)
+          targetPath: dist
+        displayName: Publish dist artifact
+
+  - job: PyPI
+    dependsOn: Package
+    trigger:
+      branches:
+        include:
+          - refs/tags/*
+    pool:
+      vmImage: ubuntu-16.04
+    steps:
+      - task: DownloadPipelineArtifact@0
+        inputs:
+          artifactName: molvs-$(Build.BuildNumber)
+          targetPath: dist
+        displayName: Download dist artifact
+      - task: TwineAuthenticate@0
+        inputs:
+          externalFeeds: pypi
+        displayName: Authenticate with PyPI
+      - script: twine upload -r pypi --config-file $PYPIRC_PATH dist/*
+        displayName: Upload to PyPI
