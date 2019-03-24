@@ -2,13 +2,20 @@ MolVS: Molecule Validation and Standardization
 ==============================================
 
 .. image:: https://img.shields.io/pypi/v/MolVS.svg?style=flat-square
+    :alt: PyPI package
     :target: https://pypi.python.org/pypi/MolVS
 
+.. image:: https://img.shields.io/conda/vn/conda-forge/molvs.svg?style=flat-square
+    :alt: Conda package
+    :target: https://anaconda.org/conda-forge/molvs
+
 .. image:: https://img.shields.io/github/license/mcs07/MolVS.svg?style=flat-square
+    :alt: MIT license
     :target: https://github.com/mcs07/MolVS/blob/master/LICENSE
 
-.. image:: https://img.shields.io/travis/mcs07/MolVS/master.svg?style=flat-square
-    :target: https://travis-ci.org/mcs07/MolVS
+.. image:: https://img.shields.io/azure-devops/build/mcs07/MolVS/1.svg?style=flat-square
+    :alt: Azure DevOps tests
+    :target: https://dev.azure.com/mcs07/MolVS/_build?definitionId=1
 
 **MolVS** is a molecule validation and standardization tool, written in Python using the `RDKit chemistry framework`_.
 
