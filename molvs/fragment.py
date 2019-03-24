@@ -158,9 +158,9 @@ class FragmentRemover(object):
         """Return the molecule with specified fragments removed.
 
         :param mol: The molecule to remove fragments from.
-        :type mol: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :type mol: rdkit.Chem.rdchem.Mol
         :return: The molecule with fragments removed.
-        :rtype: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :rtype: rdkit.Chem.rdchem.Mol
         """
         log.debug('Running FragmentRemover')
         # Iterate FragmentPatterns and remove matching fragments
@@ -204,9 +204,9 @@ class LargestFragmentChooser(object):
         fragment with the higher molecular weight, and then by taking the first alphabetically by SMILES if needed.
 
         :param mol: The molecule to choose the largest fragment from.
-        :type mol: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :type mol: rdkit.Chem.rdchem.Mol
         :return: The largest fragment.
-        :rtype: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :rtype: rdkit.Chem.rdchem.Mol
         """
         log.debug('Running LargestFragmentChooser')
         # TODO: Alternatively allow a list of fragments to be passed as the mol parameter

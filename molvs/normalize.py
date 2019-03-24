@@ -120,9 +120,9 @@ class Normalizer(object):
         series of Normalizations cause no further changes or if max_restarts (default 200) is reached.
 
         :param mol: The molecule to normalize.
-        :type mol: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :type mol: rdkit.Chem.rdchem.Mol
         :return: The normalized fragment.
-        :rtype: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :rtype: rdkit.Chem.rdchem.Mol
         """
         log.debug('Running Normalizer')
         # Normalize each fragment separately to get around quirky RunReactants behaviour

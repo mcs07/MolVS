@@ -53,9 +53,9 @@ class ResonanceEnumerator(object):
         """Enumerate all possible resonance forms and return them as a list.
 
         :param mol: The input molecule.
-        :type mol: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :type mol: rdkit.Chem.rdchem.Mol
         :return: A list of all possible resonance forms of the molecule.
-        :rtype: list of :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :rtype: list of rdkit.Chem.rdchem.Mol
         """
         flags = 0
         if self.kekule_all:

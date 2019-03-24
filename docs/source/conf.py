@@ -239,14 +239,13 @@ texinfo_documents = [
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'python': ('http://docs.python.org/', None)}
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3', None),
+    'rdkit': ('http://www.rdkit.org/docs', None)
+}
 
 # Sort autodoc members by the order they appear in the source code
 autodoc_member_order = 'bysource'
 
 # Concatenate the class and __init__ docstrings together
 autoclass_content = 'both'
-
-# Define an rdkit shortcut for external links to the RDKit docs
-extlinks = {'rdkit': ('http://www.rdkit.org/Python_Docs/rdkit.%s', '')}
-

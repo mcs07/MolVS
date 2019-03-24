@@ -79,15 +79,14 @@ class Standardizer(object):
         """Return a standardized version the given molecule.
 
         The standardization process consists of the following stages: RDKit
-        :rdkit:`RemoveHs <Chem.rdmolops-module.html#RemoveHs>`, RDKit
-        :rdkit:`SanitizeMol <Chem.rdmolops-module.html#SanitizeMol>`, :class:`~molvs.metal.MetalDisconnector`,
-        :class:`~molvs.normalize.Normalizer`, :class:`~molvs.charge.Reionizer`, RDKit
-        :rdkit:`AssignStereochemistry <Chem.rdmolops-module.html#AssignStereochemistry>`.
+        :py:func:`~rdkit.Chem.rdmolops.RemoveHs`, RDKit :py:func:`~rdkit.Chem.rdmolops.SanitizeMol`,
+        :class:`~molvs.metal.MetalDisconnector`, :class:`~molvs.normalize.Normalizer`,
+        :class:`~molvs.charge.Reionizer`, RDKit :py:func:`~rdkit.Chem.rdmolops.AssignStereochemistry`.
 
         :param mol: The molecule to standardize.
-        :type mol: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :type mol: rdkit.Chem.rdchem.Mol
         :returns: The standardized molecule.
-        :rtype: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :rtype: rdkit.Chem.rdchem.Mol
         """
         mol = copy.deepcopy(mol)
         Chem.SanitizeMol(mol)
@@ -103,10 +102,10 @@ class Standardizer(object):
         """Return the tautomer parent of a given molecule.
 
         :param mol: The input molecule.
-        :type mol: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :type mol: rdkit.Chem.rdchem.Mol
         :param bool skip_standardize: Set to True if mol has already been standardized.
         :returns: The tautomer parent molecule.
-        :rtype: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :rtype: rdkit.Chem.rdchem.Mol
         """
         if not skip_standardize:
             mol = self.standardize(mol)
@@ -120,10 +119,10 @@ class Standardizer(object):
         The fragment parent is the largest organic covalent unit in the molecule.
 
         :param mol: The input molecule.
-        :type mol: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :type mol: rdkit.Chem.rdchem.Mol
         :param bool skip_standardize: Set to True if mol has already been standardized.
         :returns: The fragment parent molecule.
-        :rtype: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :rtype: rdkit.Chem.rdchem.Mol
         """
         if not skip_standardize:
             mol = self.standardize(mol)
@@ -137,10 +136,10 @@ class Standardizer(object):
         The stereo parent has all stereochemistry information removed from tetrahedral centers and double bonds.
 
         :param mol: The input molecule.
-        :type mol: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :type mol: rdkit.Chem.rdchem.Mol
         :param bool skip_standardize: Set to True if mol has already been standardized.
         :returns: The stereo parent molecule.
-        :rtype: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :rtype: rdkit.Chem.rdchem.Mol
         """
         if not skip_standardize:
             mol = self.standardize(mol)
@@ -155,10 +154,10 @@ class Standardizer(object):
         The isotope parent has all atoms replaced with the most abundant isotope for that element.
 
         :param mol: The input molecule.
-        :type mol: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :type mol: rdkit.Chem.rdchem.Mol
         :param bool skip_standardize: Set to True if mol has already been standardized.
         :returns: The isotope parent molecule.
-        :rtype: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :rtype: rdkit.Chem.rdchem.Mol
         """
         if not skip_standardize:
             mol = self.standardize(mol)
@@ -175,10 +174,10 @@ class Standardizer(object):
         The charge parent is the uncharged version of the fragment parent.
 
         :param mol: The input molecule.
-        :type mol: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :type mol: rdkit.Chem.rdchem.Mol
         :param bool skip_standardize: Set to True if mol has already been standardized.
         :returns: The charge parent molecule.
-        :rtype: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :rtype: rdkit.Chem.rdchem.Mol
         """
         # TODO: All ionized acids and bases should be neutralised.
         if not skip_standardize:
@@ -198,10 +197,10 @@ class Standardizer(object):
         discarded. Finally, the canonical tautomer is determined and returned.
 
         :param mol: The input molecule.
-        :type mol: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :type mol: rdkit.Chem.rdchem.Mol
         :param bool skip_standardize: Set to True if mol has already been standardized.
         :returns: The super parent molecule.
-        :rtype: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :rtype: rdkit.Chem.rdchem.Mol
         """
         if not skip_standardize:
             mol = self.standardize(mol)

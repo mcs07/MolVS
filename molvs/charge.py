@@ -163,9 +163,9 @@ class Reionizer(object):
         - If the ionized acid is weaker than the protonated acid, swap proton and repeat.
 
         :param mol: The molecule to reionize.
-        :type mol: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :type mol: rdkit.Chem.rdchem.Mol
         :return: The reionized molecule.
-        :rtype: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :rtype: rdkit.Chem.rdchem.Mol
         """
         log.debug('Running Reionizer')
 
@@ -273,9 +273,9 @@ class Uncharger(object):
         """Neutralize molecule by adding/removing hydrogens.
 
         :param mol: The molecule to uncharge.
-        :type mol: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :type mol: rdkit.Chem.rdchem.Mol
         :return: The uncharged molecule.
-        :rtype: :rdkit:`Mol <Chem.rdchem.Mol-class.html>`
+        :rtype: rdkit.Chem.rdchem.Mol
         """
         log.debug('Running Uncharger')
         mol = copy.deepcopy(mol)
