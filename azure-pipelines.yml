@@ -1,14 +1,30 @@
 jobs:
-  - job: 'linux'
-    pool:
-      vmImage: 'Ubuntu-16.04'
+  - job: 'test'
+
     strategy:
       matrix:
-        python36:
+        linux_python36:
+          VM_IMAGE: 'ubuntu-16.04'
           PYTHON_VERSION: '3.6'
-        python37:
+        linux_python37:
+          VM_IMAGE: 'ubuntu-16.04'
+          PYTHON_VERSION: '3.7'
+        mac_python36:
+          VM_IMAGE: 'macOS-10.13'
+          PYTHON_VERSION: '3.6'
+        mac_python37:
+          VM_IMAGE: 'macOS-10.13'
+          PYTHON_VERSION: '3.7'
+        win_python36:
+          VM_IMAGE: 'vs2017-win2016'
+          PYTHON_VERSION: '3.6'
+        win_python37:
+          VM_IMAGE: 'vs2017-win2016'
           PYTHON_VERSION: '3.7'
       maxParallel: 4
+
+    pool:
+      vmImage: $(VM_IMAGE)
 
     steps:
 
