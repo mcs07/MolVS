@@ -250,21 +250,3 @@ autoclass_content = 'both'
 # Define an rdkit shortcut for external links to the RDKit docs
 extlinks = {'rdkit': ('http://www.rdkit.org/Python_Docs/rdkit.%s', '')}
 
-
-class Mock(object):
-    """Mock."""
-
-    def __init__(self, *args, **kwargs):
-        pass
-
-    def __call__(self, *args, **kwargs):
-        if args and callable(args[0]):
-            return args[0]
-        return Mock()
-
-    def __getattribute__(self, name):
-        return Mock()
-
-# Mock rdkit imports so autodoc works even when rdkit isn't installed
-for mod_name in ['rdkit', 'rdkit.Chem', 'rdkit.Chem.rdchem']:
-    sys.modules[mod_name] = Mock()
