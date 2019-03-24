@@ -5,8 +5,6 @@ molvs.errors
 
 This module contains exceptions that are raised by MolVS.
 
-:copyright: Copyright 2016 by Matt Swain.
-:license: MIT, see LICENSE file for more details.
 """
 
 from __future__ import print_function

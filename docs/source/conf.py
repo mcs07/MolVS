@@ -251,19 +251,6 @@ autoclass_content = 'both'
 extlinks = {'rdkit': ('http://www.rdkit.org/Python_Docs/rdkit.%s', '')}
 
 
-def process_docstring(app, what, name, obj, options, lines):
-    """Filter out meta fields from module docstrings when used by autodoc."""
-    if not what == 'module':
-        return
-    for l in reversed(lines):
-        if l.startswith(':copyright:') or l.startswith(':license:'):
-            lines.remove(l)
-
-
-def setup(app):
-    app.connect('autodoc-process-docstring', process_docstring)
-
-
 class Mock(object):
     """Mock."""
 

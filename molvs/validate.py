@@ -7,8 +7,6 @@ This module contains the main :class:`~molvs.validate.Validator` class that can 
 :class:`Validations <molvs.validations.Validation>`, as well as the :func:`~molvs.validate.validate_smiles()`
 convenience function.
 
-:copyright: Copyright 2016 by Matt Swain.
-:license: MIT, see LICENSE file for more details.
 """
 
 from __future__ import print_function

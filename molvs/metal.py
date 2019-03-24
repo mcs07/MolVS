@@ -5,8 +5,6 @@ molvs.metal
 
 This module contains tools for disconnecting metal atoms that are defined as covalently bonded to non-metals.
 
-:copyright: Copyright 2016 by Matt Swain.
-:license: MIT, see LICENSE file for more details.
 """
 
 from __future__ import print_function

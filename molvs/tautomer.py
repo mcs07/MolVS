@@ -5,8 +5,6 @@ molvs.tautomer
 
 This module contains tools for enumerating tautomers and determining a canonical tautomer.
 
-:copyright: Copyright 2016 by Matt Swain.
-:license: MIT, see LICENSE file for more details.
 """
 
 from __future__ import print_function

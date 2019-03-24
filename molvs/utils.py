@@ -5,8 +5,6 @@ molvs.utils
 
 This module contains miscellaneous utility functions.
 
-:copyright: Copyright 2016 by Matt Swain.
-:license: MIT, see LICENSE file for more details.
 """
 
 from __future__ import print_function

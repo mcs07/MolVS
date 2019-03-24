@@ -5,8 +5,6 @@ molvs.cli
 
 This module contains a command line interface for standardization.
 
-:copyright: Copyright 2016 by Matt Swain.
-:license: MIT, see LICENSE file for more details.
 """
 
 from __future__ import print_function

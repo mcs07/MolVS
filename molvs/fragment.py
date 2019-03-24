@@ -7,8 +7,6 @@ This module contains tools for dealing with molecules with more than one covalen
 :class:`~molvs.fragment.LargestFragmentChooser`, which returns the largest covalent unit in a molecule, and
 :class:`~molvs.fragment.FragmentRemover`, which filters out fragments from a molecule using SMARTS patterns.
 
-:copyright: Copyright 2016 by Matt Swain.
-:license: MIT, see LICENSE file for more details.
 """
 
 from __future__ import print_function

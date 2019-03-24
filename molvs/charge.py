@@ -7,8 +7,6 @@ This module implements tools for manipulating charges on molecules. In particula
 which competitively reionizes acids such that the strongest acids ionize first, and :class:`~molvs.charge.Uncharger`,
 which attempts to neutralize ionized acids and bases on a molecule.
 
-:copyright: Copyright 2016 by Matt Swain.
-:license: MIT, see LICENSE file for more details.
 """
 
 from __future__ import print_function
