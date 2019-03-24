@@ -1,13 +1,12 @@
 jobs:
-  - job: 'linux_test'
-    displayName: 'Linux Test'
+  - job: 'linux'
     pool:
       vmImage: 'Ubuntu-16.04'
     strategy:
       matrix:
-        Python36:
+        python36:
           PYTHON_VERSION: '3.6'
-        Python37:
+        python37:
           PYTHON_VERSION: '3.7'
       maxParallel: 4
 
@@ -19,7 +18,7 @@ jobs:
       - bash: sudo chown -R $USER /usr/share/miniconda
         displayName: Take ownership of conda installation
 
-      - script: conda env create --yes --quiet --name molvs python=$(PYTHON_VERSION)
+      - script: conda env create --quiet --name molvs python=$(PYTHON_VERSION)
         displayName: Create conda environment
 
       - script: conda env update --quiet --name molvs --file environment.yml
