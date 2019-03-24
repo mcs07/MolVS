@@ -1,5 +1,5 @@
 jobs:
-  - job: 'test'
+  - job: 'Test'
 
     strategy:
       matrix:
@@ -29,10 +29,16 @@ jobs:
     steps:
 
       - bash: echo "##vso[task.prependpath]/usr/share/miniconda/bin"
-        displayName: Add conda to PATH
+        condition: eq( variables['Agent.OS'], 'Linux' )
+        displayName: Add conda to PATH (Linux)
 
-      - bash: sudo chown -R $USER /usr/share/miniconda
-        displayName: Take ownership of conda installation
+      - bash:
+        condition: echo "##vso[task.prependpath]$CONDA/bin"
+        displayName: Add conda to PATH (Mac)
+
+      - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
+        condition: eq( variables['Agent.OS'], 'Windows_NT' )
+        displayName: Add conda to PATH (Windows)
 
       - script: conda env create --quiet --name molvs python=$(PYTHON_VERSION)
         displayName: Create conda environment
@@ -44,10 +50,18 @@ jobs:
           source activate molvs
           python -m pip install . --no-deps
           pytest --junitxml=result.xml
-        displayName: Run tests
+        displayName: Run tests (Linux/Mac)
+        condition: ne( variables['Agent.OS'], 'Windows_NT' )
+
+      - script: |
+          call activate molvs
+          python -m pip install . --no-deps
+          pytest --junitxml=result.xml
+        displayName: Run tests (Windows)
+        condition: eq( variables['Agent.OS'], 'Windows_NT' )
 
       - task: PublishTestResults@2
         inputs:
           testResultsFiles: 'result.xml'
-          testRunTitle: 'Python $(PYTHON_VERSION)'
+          testRunTitle: 'Python $(PYTHON_VERSION) ($(VM_IMAGE))'
         condition: succeededOrFailed()
