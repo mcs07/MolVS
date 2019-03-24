@@ -32,8 +32,8 @@ jobs:
         condition: eq( variables['Agent.OS'], 'Linux' )
         displayName: Add conda to PATH (Linux)
 
-      - bash:
-        condition: echo "##vso[task.prependpath]$CONDA/bin"
+      - bash: echo "##vso[task.prependpath]$CONDA/bin"
+        condition: eq( variables['Agent.OS'], 'Darwin' )
         displayName: Add conda to PATH (Mac)
 
       - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
