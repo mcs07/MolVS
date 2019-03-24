@@ -41,7 +41,7 @@ Alternatively, try one of the other `installation options`_.
 Documentation
 -------------
 
-Full documentation is available at http://molvs.readthedocs.io.
+Full documentation is available at https://molvs.readthedocs.io.
 
 Contribute
 ----------
